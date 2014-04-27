@@ -1,0 +1,11 @@
+libata polling patch
+
+Fixes the qc timeout problem which we have
+in 620/660 machines and the latest kernel (a lot
+simpler than before one i did), using the 
+ATA_TFLAG_POLLING flag only in two places.
+
+This enables to use Compact Flash cards as root
+disk (which is the only way to use Linux in our SuperH machines).
+
+

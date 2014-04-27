@@ -1,0 +1,6 @@
+
+This patch adds polling to ide on CF support.
+We need to fix properly why the interrupt is lost.
+
+With these changes we are able to use Compact Flash
+as root disk (which is the only way to use HP Palmtops with Linux).

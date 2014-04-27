@@ -1,0 +1,77 @@
+
+Date:	 Thu, 4 Oct 2007 09:44:48 -0700 (PDT)
+From:	"Rafael Ignacio Zurita" <rizurita@yahoo.com>
+Subject:	time tests between 2.6.17 and 2.6.23 for 620/660
+To:	"Kristoffer Ericson" <kristoffer.ericson@gmail.com>
+CC:	b_linuz@yahoo.com
+
+
+Hello guys..
+ I did some tests to compare speeds.
+
+I think that the 620/660 users will be happier
+with the next jlime's kernel :)
+I attach the results.
+
+Regards,
+Rafa
+
+
+
+--
+Rafael Ignacio Zurita
+Buenos Aires, Argentina
+
+
+    
+These tests were done to check speeds between 2.6.17 +
+ ide-polling.patch
+and 2.6.23-rc5 + libata-core-polling.patch jlime kernels.
+
+
+Boot test
+---------
+mount root FS, run init, run initscripts.
+
+Times (2.6.17 + ide-polling.patch jlime kernel):
+	start: jue oct  4 12:43:46 ART 2007
+	end: jue oct  4 12:49:46 ART 2007
+	TOTAL: 00:06:00
+
+Times (2.6.23-rc5 + libata-core-polling.patch jlime kernel):
+	start: jue oct  4 12:39:08 ART 2007
+	end: jue oct  4 12:39:56 ART 2007
+	TOTAL: 00:00:48
+
+
+Write test
+----------
+copy files between partitions. It was:
+mount FAT partition, copy files from FAT to ext2 partition,
+umount FAT. Five files were copied (6MB).
+
+Times (2.6.17 + ide-polling.patch jlime kernel):
+	start: jue oct  4 12:49:58 ART 2007
+	end: jue oct  4 12:55:28 ART 2007
+	TOTAL: 00:05:30
+
+Times (2.6.23-rc5 + libata-core-polling.patch jlime kernel):
+	start: jue oct  4 12:39:56 ART 2007
+	end: jue oct  4 12:40:19 ART 2007
+	TOTAL: 00:00:23
+
+
+Start X and jwm
+---------------
+
+Times (2.6.17 + ide-polling.patch jlime kernel):
+	start: jue oct  4 12:55:39 ART 2007
+	end: jue oct  4 12:56:58 ART 2007
+	TOTAL: 00:01:19
+
+Times (2.6.23-rc5 + libata-core-polling.patch jlime kernel):
+	start: jue oct  4 12:40:33 ART 2007
+	end: jue oct  4 12:40:46 ART 2007
+	TOTAL: 00:00:13
+
+

@@ -1,0 +1,8 @@
+From: Rafael Ignacio Zurita <rizurita <at> yahoo.com>
+Subject: [PATCH] sh: fix rtc_resources setup for sh770x
+Newsgroups: gmane.linux.ports.sh.devel
+Date: 2008-02-19 01:32:58 GMT (43 weeks, 18 hours and 36 minutes ago)
+
+Fix the RTC resources setup for sh770x. Whit these proper
+start values RTC driver (drivers/rtc/rtc-sh.c) works.
+

@@ -1,0 +1,67 @@
+
+Add polling to ide on CF support.
+We need to fix properly why the interrupt is lost.
+
+Signed off-by: Rafael Ignacio Zurita <rizurita@yahoo.com>
+---
+
+--- 2.6.21/drivers/ide/ide-probe.c	2007-04-11 00:18:51.000000000 -0400
++++ new/drivers/ide/ide-probe.c	2007-04-12 09:26:14.000000000 -0400
+@@ -1014,6 +1014,27 @@
+  * but anything else has led to problems on some machines.  We re-enable
+  * interrupts as much as we can safely do in most places.
+  */
++struct timer_list polling_timer;
++static void ide_polling (unsigned long data)
++{
++	ide_hwgroup_t *hwgroup = (void *)data;
++	ide_hwif_t *hwif;
++	int irq = 0;
++
++	if (hwgroup) {
++		hwif = hwgroup->hwif;
++		if (hwif)
++			irq = hwif->irq;
++	}
++
++	ide_intr(irq, hwgroup);
++	init_timer(&polling_timer);
++	polling_timer.expires = jiffies + 1;
++	polling_timer.function = &ide_polling;
++	polling_timer.data = (unsigned long) hwgroup;
++	add_timer(&polling_timer);
++}
++
+ static int init_irq (ide_hwif_t *hwif)
+ {
+ 	unsigned int index;
+@@ -1110,9 +1131,12 @@
+ 		if (hwif->io_ports[IDE_CONTROL_OFFSET])
+ 			/* clear nIEN */
+ 			hwif->OUTB(0x08, hwif->io_ports[IDE_CONTROL_OFFSET]);
+-
++#if 0
+ 		if (request_irq(hwif->irq,&ide_intr,sa,hwif->name,hwgroup))
+ 	       		goto out_unlink;
++#else
++		ide_polling((unsigned long)hwgroup);
++#endif
+ 	}
+ 
+ 	/*
+@@ -1156,6 +1180,7 @@
+ 	printk("\n");
+ 	up(&ide_cfg_sem);
+ 	return 0;
++#if 0
+ out_unlink:
+ 	spin_lock_irq(&ide_lock);
+ 	if (hwif->next == hwif) {
+@@ -1176,6 +1201,7 @@
+ 		BUG_ON(hwgroup->hwif == hwif);
+ 	}
+ 	spin_unlock_irq(&ide_lock);
++#endif
+ out_up:
+ 	up(&ide_cfg_sem);
+ 	return 1;

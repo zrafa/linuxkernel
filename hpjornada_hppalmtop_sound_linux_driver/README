@@ -1,0 +1,9 @@
+
+This sound driver adds sound support to, at least, four different
+HP6x SuperH arch machines : HP Jornada 680, HP Jornada 690, HP Palmtop 620lx
+and HP Palmtop 660lx.
+
+It was tested in all those hp6x SuperH machines.
+The driver is part of mainline Linux kernel http://www.kernel.org since 2007,
+so new patches on this should be sent to ALSA Linux and SuperH Linux kernel
+mailing list.
