@@ -1,0 +1,34 @@
+/.cvsignore/1.1/Wed May 12 13:51:13 2004/-ko/
+/Makefile/1.19/Sun Jan 29 17:46:23 2006//
+/apm.c/1.2/Mon Jan 30 15:57:20 2006//
+/asm-offsets.c/1.1/Mon Jun 28 22:03:37 2004/-ko/
+/cf-enabler.c/1.6/Wed Jan  4 18:03:38 2006/-ko/
+/cpufreq.c/1.7/Tue Jan  3 22:35:53 2006/-ko/
+/early_printk.c/1.4/Sat Aug 13 15:49:28 2005//
+/entry.S/1.46/Sun Jan 29 17:46:23 2006/-ko/
+/head.S/1.9/Thu Oct 20 22:51:38 2005/-ko/
+/init_task.c/1.7/Sun Aug 15 16:59:26 2004//
+/io.c/1.7/Wed Nov 23 15:47:38 2005/-ko/
+/io_generic.c/1.6/Tue Jan  3 22:51:47 2006/-ko/
+/kgdb_jmp.S/1.2/Fri Nov  1 17:19:24 2002//
+/kgdb_stub.c/1.5/Sun Feb  5 12:27:59 2006//
+/machine_kexec.c/1.1/Mon Sep 19 19:20:56 2005/-ko/
+/module.c/1.5/Sun Feb 22 23:08:43 2004/-ko/
+/pm.c/1.2/Mon Jan 30 15:57:20 2006//
+/ptrace.c/1.22/Mon Mar 27 21:06:13 2006//
+/relocate_kernel.S/1.1/Mon Sep 19 19:20:56 2005/-ko/
+/semaphore.c/1.4/Thu Mar 17 07:40:18 2005/-ko/
+/sh_bios.c/1.3/Tue Jun 15 18:40:42 2004/-ko/
+/signal.c/1.30/Fri Oct 28 13:12:48 2005/-ko/
+/smp.c/1.10/Mon Mar 27 21:06:14 2006/-ko/
+/sys_sh.c/1.11/Sat Dec 31 11:30:47 2005//
+/vmlinux.lds.S/1.6/Thu Mar 17 07:49:06 2005/-ko/
+D/cpu////
+D/timers////
+/irq.c/1.28/Wed Jul  5 14:50:39 2006/-ko/
+/process.c/1.42/Fri Jul  7 10:15:14 2006/-ko/
+/syscalls.S/1.4/Fri Jul  7 10:15:14 2006/-ko/
+/setup.c/1.53/Sat Jul  8 20:16:09 2006/-ko/
+/time.c/1.38/Sat Jul  8 20:16:09 2006/-ko/
+/sh_ksyms.c/1.26/Wed Jul 12 16:51:54 2006//
+/traps.c/1.21/Wed Jul 12 16:51:54 2006/-ko/

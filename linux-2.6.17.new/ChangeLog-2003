@@ -1,0 +1,1409 @@
+2003-12-18  Paul Mundt  <lethal@linux-sh.org>
+
+	* mm/mmap.c, Makefile: Merge 2.6.0.
+
+2003-11-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/ptrace.h (struct pt_regs): Remove expevt field.
+	* arch/sh/kernel/ptrace.c (get_stack_long): Count EXPEVT slot and
+	DSP case.
+	(put_stack_long): Likewise.
+	* arch/sh/kernel/process.c (dump_task_regs): Likewise.
+	(copy_thread): Likewise.
+
+2003-11-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/kgdb.h (kgdb_flush_icache_range): Define.
+	* arch/sh/kernel/kgdb_stub.c (get_step_address): Use it.
+	(do_single_step, undo_single_step, write_mem_msg): Likewise.
+	* include/asm-sh/processor.h (struct thread_struct): Add
+	ubc_pc field.
+	* arch/sh/kernel/process.c (ubc_usercnt): New variable.
+	(exit_thread): Clear ubc_pc if required.
+	(copy_thread): Initialize ubc_pc.
+	(ubc_set_tracing): New.
+	(__switch_to): Call ubc_set_tracing if needed.
+	(break_point_trap): Clear ubc_pc.
+	* arch/sh/kernel/ptrace.c (compute_next_pc): Remove.
+	(ubc_set_tracing): Likewise.
+	(sys_ptrace) [PTRACE_SINGLESTEP]: Only set ubc_pc here.
+
+2003-11-26  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile: Merge 2.6.0-test11.
+
+2003-11-25  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/ptrace.h (struct pt_regs): Add expevt field.
+
+2003-11-23  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, drivers/ide/Kconfig, drivers/ide/pci/alim15x3.c,
+	drivers/net/8139too.c, include/linux/pci_ids.h, mm/memory.c:
+	Merge 2.6.0-test10.
+
+2003-11-18  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S (tlb_miss_load, tlb_miss_store,
+	initial_page_write, tlb_protection_violation_load,
+	tlb_protection_violation_store, address_error_load,
+	address_error_store, system_call): Make these global, so we can
+	reference them externally for the exception handling table.
+	(none): Renamed to exception_none.
+	(error): Renamed to exception_error.
+	(exception_handling_table): Removed. Now defined per-processor
+	family.
+
+	* arch/sh/kernel/cpu/sh3/Makefile: Add ex.o rule.
+	* arch/sh/kernel/cpu/sh3/ex.S: SH-3 exception handling table.
+
+	* arch/sh/kernel/cpu/sh4/Makefile: Add ex.o rule.
+	* arch/sh/kernel/cpu/sh4/ex.S: SH-4 exception handling table.
+
+2003-11-17  PAul van Gool <pvangool@mimotech.com>
+
+	* arch/sh/configs/defconfig-se7751: Changed default config for
+	SolutionEngine 7751(R) boards so default Linux 2.6.0-test9 builds
+	run on those boards.
+
+2003-11-14  Richard Curnow  <richard.curnow@superh.com>
+
+	* arch/sh/kernel/traps.c (trap_init): If there's no FPU (or it's
+	disabled) on the SH-4, treat the FPUDIS and SLOTFPUDIS exceptions
+	as reserved.
+
+2003-11-11  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/cpu-sh2/sigcontext.h: New file.
+	* include/asm-sh/cpu-sh3/sigcontext.h: Likewise.
+	* include/asm-sh/cpu-sh4/sigcontext.h: Likewise.
+	* include/asm-sh/sigcontext.h: Remove the definition of
+	sigcontext struct and include cpu specific sigcontext.h.
+
+2003-11-10  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpu/sh4/sq.c (__sq_remap, sq_unmap): Build fixes
+	for MMUless.
+
+2003-10-31  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/mm/init.c (paging_init): Clear the size of normal zone
+	if all pages are in dma zone.
+
+2003-10-29  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S (CLI): Added. Consolidate CLI.
+	(resume_kernel, preempt_stop): Added. CONFIG_PREEMPT works again.
+	(ret_from_exception): Move above ret_from_irq and call preempt_stop().
+
+	* TODO: Preemption works now, take it off the TODO list..
+
+2003-10-29  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/ptrace.h (REG_FPREG0, REG_FPREG15, REG_XFREG0,
+	REG_FPSCR, REG_FPUL): Change so to match user.h struct.
+
+2003-10-25  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/char/keyboard.c, drivers/char/Makefile, Makefile,
+	drivers/char/tty_io.c, mm/memory.c, mm/mmap.c: Merge 2.6.0-test9.
+
+	* arch/sh/mm/Makefile: Don't build regular copy/clear_page.S when
+	we don't have an MMU.
+	* arch/sh/mm/pg-nommu.c: New file. clear_page()/copy_page() without
+	an MMU.
+
+	* include/asm-sh/page.h: Wrap clear_user_page()/copy_user_page()
+	to clear_page()/copy_page() when building for !CONFIG_MMU.
+
+2003-10-18  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add CONFIG_MAPLE back in.
+
+	* drivers/maple/Makefile: Fix for 2.6.
+	* drivers/maple/maple.c (maple_freeq): Removed. This is only called
+	once, and kfree() does all of this for us already..
+	(kmapled_thread): Drop the BKL, fixup damonize() / tsk->comm for 2.6,
+	and finally, allow for SIGKILL from userspace.
+
+2003-10-18  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/entry.S (sys_call_table): Reserve an entry.
+	* include/asm-sh/unistd.h (__NR_vserver): Define.
+	(NR_syscalls): Update.
+	* arch/sh/kernel/irq.c (disable_irq): Call synchronize_irq only
+	if the action is not NULL.
+	(enable_irq): Drop IRQ_INPROGRESS bit from status if depth is 1.
+	* arch/sh/kernel/traps.c (show_stack): Use kstack_end.
+
+2003-10-17  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/char/tty_io.c, drivers/net/8139too.c, Makefile:
+	Merge 2.6.0-test8.
+
+	* net/sunrpc/clnt.c: Deleted, merged into mainline..
+
+2003-10-14  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S, arch/sh/kernel/sh_ksyms.c,
+	arch/sh/kernel/cpu/sh4/sq.c: MMUless cleanups.
+
+	* include/asm-sh/flat.h: New file (needed for binfmt_flat).
+
+2003-10-13  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/boards/dreamcast/setup.c, arch/sh/kernel/irq.c,
+	arch/sh/kernel/process.c, arch/sh/kernel/setup.c,
+	arch/sh/kernel/signal.c, arch/sh/kernel/sys_sh.c,
+	drivers/char/sh-sci.c, include/asm-sh/ipc.h, include/asm-sh/irq.h,
+	include/asm-sh/uaccess.h, include/asm-sh/unistd.h: Random cleanup
+	of bugs encountered by sparse (mostly __user annotations).
+
+2003-10-12  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S (exception_handling_table): Label exception
+	codes, thoroughly. Add TMU3 and TMU4 vectors for 7751, and also add
+	7760 vectors.
+
+	* drivers/char/sh-sci.[ch]: Add 7760 support.
+
+	* arch/sh/Kconfig, arch/sh/Makefile, arch/sh/tools/mach-types: Add
+	CONFIG_SH_7751_SYSTEMH rules.
+
+	* arch/sh/boards/systemh/Makefile, arch/sh/boards/systemh/io.c,
+	arch/sh/boards/systemh/irq.c, arch/sh/boards/systemh/setup.c,
+	include/asm-sh/systemh/7751systemh.h, include/asm-sh/systemh/io.h:
+	Add SystemH 7751R support (ported from MPC Data's 2.4.18 tree).
+
+	* arch/sh/configs/defconfig-systemh: Provide a rough defconfig.
+
+2003-10-10  Paul van Gool  <pvangool@mimotech.com>
+
+	* arch/sh/boards/se/7751/pci.c: Replaced compile-time check
+	'PCIBIOS_MIN_MEM != SH7751_PCI_MEMORY_BASE' with a runtime
+	check (BUG_ON()).
+
+2003-10-09  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/dma/dma-pvr2.c (pvr2_get_dma_residue): Added.
+	(pvr2_dma_interrupt): Set xfer_complete when the completion
+	interrupt fires.
+
+	* drivers/video/pvr2fb.c (pvr2fb_open, pvr2fb_release): Removed.
+	(pvr2fb_dc_init): Do request_dma() for pvr2 channel here instead.
+	(pvr2fb_dc_exit): Likewise for free_dma().
+
+	* arch/sh/kernel/time.c (sched_clock): Cloned from v850.
+
+	* net/sunrpc/clnt.c (call_verify): Compile fix. Make all users of
+	task->tk_pid use dprintk().
+
+	* Makefile, Documentation/cachetlb.txt, arch/sh/kernel/init_task.c,
+	arch/sh/kernel/irq.c, arch/sh/kernel/process.c, arch/sh/kernel/time.c,
+	arch/sh/kernel/traps.c, arch/sh/mm/init.c, arch/sh/mm/ioremap.c,
+	drivers/char/generic_serial.c, drivers/char/tty_io.c,
+	drivers/ide/Kconfig, drivers/serial/Kconfig, drivers/video/Kconfig,
+	fs/nfs/inode.c, include/asm-sh/cacheflush.h, include/asm-sh/mmzone.h,
+	include/asm-sh/pgtable.h, include/asm-sh/bigsur/serial.h,
+	include/asm-sh/ec3104/serial.h, include/linux/mm.h, mm/memory.c,
+	mm/mmap.c: Merge 2.6.0-test7.
+
+	* Makefile, arch/sh/Kconfig, arch/sh/kernel/setup.c,
+	drivers/char/Makefile, drivers/char/keyboard.c, drivers/char/sysrq.c,
+	drivers/char/tty_io.c, drivers/ide/Kconfig, drivers/serial/Kconfig,
+	drivers/serial/Makefile, drivers/video/Kconfig, include/asm-sh/mman.h,
+	include/asm-sh/posix_types.h, include/asm-sh/processor.h,
+	include/asm-sh/signal.h include/linux/input.h,
+	include/linux/miscdevice.h, include/linux/mm.h, mm/memory.c,
+	mm/mmap.c: Merge 2.6.0-test6.
+
+2003-10-08  Paul van Gool  <pvangool@mimotech.com>
+
+	* arch/sh/boards/se/7751/pci.c: Since PCIBIOS_MIN_MEM is no
+	longer a hardcoded define, we can no longer use it with the
+	preprocessor.
+
+	* arch/sh/drivers/pci/pci-sh7751.c: Include linux/delay.h to get
+	definition of mdelay.
+
+2003-10-08  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/video/pvr2fb.c (pvr2fb_open, pvr2fb_release, pvr2fb_write):
+	Added zero-copy DMA when CONFIG_SH_DMA is set.
+	(pvr2fb_common_init): Map through the store queues when we have
+	CONFIG_SH_STORE_QUEUES set.
+
+2003-10-01  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+            Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/signal.c (OR_R0_R0): Define.
+	(struct sigframe): Extend retcode to hold 8 instructions.
+	(struct rt_sigframe): Likewise.
+	(setup_frame): Put 5 "or r0,r0" instructions to avoid an SH-4
+	core bug.  Flush more cache line if needed.
+	(setup_rt_frame): Likewise.
+
+2003-09-30  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/dma/Kconfig: Add a couple of options, clean up
+	channel number selection for both on-chip and off-chip channels.
+
+	* arch/sh/drivers/dma/dma-sh.c: Relatively large batch of changes.
+	Dropped SAR/DAR/CHCR/DMATCR[] usage and went to a direct mapping of
+	the registers directly. We now support all 8 channels of the 7751R.
+
+	* arch/sh/drivers/dma/dma-sh.h: Define MAX_DMAC_CHANNELS (wrap to
+	CONFIG_NR_ONCHIP_DMA_CHANNELS).
+
+	* arch/sh/entry.S (interrupt_table): Add hooks for DMTE4-7 on the
+	7751R.
+
+	* include/asm-sh/dma.h: Cleanup MAX_DMA_CHANNELS definition based
+	off of config options.
+
+	* include/asm-sh/irq.h: Add DMTE4-7 definitions.
+
+	* include/asm-sh/cpu-sh3/dma.h: Kill off old definitions. Define
+	SH_DMAC_BASE.
+	* include/asm-sh/cpu-sh4/dma.h: Same here.
+
+2003-09-23  Sean McGoogan  <Sean.McGoogan@superh.com>
+
+	* arch/sh/kernel/entry.S: preserve EXPEVT across nested interrupts.
+
+	* arch/sh/kernel/cpu/sh4/fpu.c: Ensure that FPSCR.PR == FPSCR.SZ == 1
+	never occurs.
+
+2003-09-22  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/pci/pci-sh7751.c: Fixup pci-sh7751.h path.
+
+	* arch/sh/boards/snapgear/io.c: Same here.
+
+	* arch/sh/mm/cache-sh4.c (detect_cpu_and_cache_system): Add run-time
+	probing for the SH7760 and the SH4-202. Force EMODE on subtypes that
+	have it available.
+
+	* include/asm-sh/processor.h: Add CPU_SH7760 and CPU_SH4_202
+	definitions.
+
+2003-09-22  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/signal.c (MOVW, TRAP16): Define.
+	(struct sigframe): Change retcode so to hold 3 words.
+	(struct rt_sigframe): Likewise.  Remove pinfo and puc members.
+	(setup_frame): Use mov.w 1f,r3; trap #0x10; 1: .word N sequence
+	in trampoline.
+	(setup_rt_frame): Likewise.  Don't set pinfo and puc of frame.
+
+2003-09-21  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add a sane default for SH7751 PCLK value.
+
+	* arch/sh/boards/bigsur/Makefile: Remove pci.o
+	* arch/sh/boards/bigsur/pci.c: Ported for new SH7751 PCI changes, and
+	moved ..
+	* arch/sh/drivers/pci/ops-bigsur.c: here.
+
+	* arch/sh/boards/snapgear/Makefile, arch/sh/boards/snapgear/pci.c,
+	arch/sh/drivers/pci/ops-snapgear.c: Same changes as for BigSur.
+
+	* arch/sh/drivers/pci/Makefile: Add bigsur/snapgear ops.
+
+	* arch/sh/mm/init.c: Include linux/pagemap.h, shut up compiler.
+
+	* include/asm-sh/pci-sh7751.h: Added changes for new interface, and
+	moved ..
+	* arch/sh/drivers/pci/pci-sh7751.h: here.
+
+	* arch/sh/drivers/pci/pci-sh7751.c: Fixup pci_probe definition, we
+	don't deal with anything other then conf1 access, so drop the unused
+	flags.
+	(__area_sdram_check): Added. Responsible for BCR1/BCR2 validation
+	for a given area.
+	(sh7751_pcic_init): Added. Do general purpose initialization here.
+	window0/window1 values are passed in in the form of an address map
+	structure. Any boards doing this type of general initialization
+	should be using this code instead (so far BigSur and SnapGear boards,
+	though this will also include the SystemH 7751R).
+	(pcibios_setup): Get rid of conf1 and rom args, as they aren't used.
+	
+	* include/asm-sh/pci.h: Get rid of hardcoded PCIBIOS_MIN_{IO,MEM}
+	definitions. Wrap these to their respective resources in
+	board_pci_channels instead.
+
+	* drivers/serial/sh-sci.c: Updates for new SH-SCI driver.
+
+2003-09-18  David McCullough <davidm@snapgear.com>
+
+	* arch/sh/boards/snapgear/pci/pci.c: fixup the memory and IO regions
+	  to get PCI working.
+
+2003-09-17  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/pci/pci-sh7751.c (sh7751_pci_write): Fixup error
+	path where interrupts weren't getting reenabled.
+
+2003-09-16  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/dma/Makefile: Add dma-isa.o and dma-g2.o.
+	* arch/sh/drivers/dma/dma-isa.c: New file (provides wrapper for old
+	ISA DMA API to new DMA API).
+
+	* arch/sh/drivers/dma/dma-g2.c: New file (adds preliminary support
+	for G2 DMA -- currently being tested for SPU DMA, though there
+	are still some issues with the interrupt not firing correctly).
+
+	* include/asm-sh/dma.h (claim_dma_lock, release_dma_lock): Moved to
+	dma-isa.c.
+
+2003-09-08  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/Kconfig, arch/sh/boards/dmida/mach.c,
+	arch/sh/boards/dreamcast/irq.c, arch/sh/boards/ec3104/irq.c,
+	arch/sh/boards/harp/mach.c, arch/sh/boards/hp6xx/hp620/mach.c,
+	arch/sh/boards/hp6xx/hp680/mach.c, arch/sh/boards/hp6xx/hp690/mach.c,
+	arch/sh/boards/overdrive/mach.c, arch/sh/boards/saturn/irq.c,
+	arch/sh/boards/unknown/mach.c, arch/sh/kernel/cpufreq.c,
+	drivers/Makefile, drivers/char/generic_serial.c,
+	drivers/char/tty_io.c, drivers/ide/Kconfig, drivers/video/Kconfig,
+	drivers/ide/pci/alim15x3.c, drivers/net/8139too.c,
+	drivers/pci/pci.ids, drivers/serial/Kconfig, drivers/serial/Makefile,
+	drivers/video/Makefile, drivers/video/fbmem.c, fs/nfs/inode.c,
+	include/asm-sh/semaphore.h, include/linux/miscdevice.h,
+	include/linux/mm.h, include/linux/pci_ids.h, mm/memory.c,
+	mm/mmap.c: Merge 2.6.0-test5.
+
+2003-09-06  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Reorder CPU family / subtype selection.
+
+2003-09-06  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/lib/div64-generic.c (__div64_32): Bug fix.
+
+2003-09-03  TAKANO Nobuyuki  <n_takano@sas-tokyo.co.jp>
+	    Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* drivers/char/sh-sci.c (sci_init_pins_scif): Mask correct
+	bits of SCPCR.
+	(sci_set_real_termios): Don't change TTY_HW_COOK_IN and
+	TTY_HW_COOK_OUT flags.
+	* drivers/char/sh-sci.h (O_OTHER, I_OTHER): Remove.
+
+2003-09-02  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/signal.c (setup_frame): Set additional arguments
+	for the signal handler correctly.
+	(setup_rt_frame): Likewise.
+
+2003-09-01  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add CONFIG_SH_DSP.
+	
+	* arch/sh/kernel/entry.S: Save and restore DSP registers when
+	CONFIG_SH_DSP is set.
+	* arch/sh/kernel/head.S: Do initial callin to sh_cpu_init instead
+	of sh_cache_init.
+
+	* arch/sh/kernel/ptrace.c: Add PTRACE_SETDSPREGS/PTRACE_GETDSPREGS
+	cases to copyin/out dsp regs.
+
+	* arch/sh/kernel/setup.c (setup_arch): Remove UBC and FPU setup,
+	this is done at sh_cpu_init() time instead.
+
+	* arch/sh/kernel/traps.c (is_dsp_init): Added.
+	(do_reserved_inst, do_illegal_slot_inst): Check for DSP instruction
+	when CONFIG_SH_DSP is set.
+
+	* arch/sh/kernel/cpu/Makefile: Add init.o.
+	* arch/sh/kernel/cpu/init.c: New file. Do initial CPU init here.
+	Add DSP init code.
+
+	* arch/sh/mm/init.c (sh_cache_init): Moved to arch/sh/kernel/cpu/init.c
+
+	* include/asm-sh/processor.h: Add CPU_HAS_DSP flag.
+	* include/asm-sh/ptrace.h: Add DSP regs.
+
+	* arch/sh/kernel/irq.c (probe_irq_on): Convert the last remaining
+	synchronize_irq() to barrier().
+
+	* arch/sh/kernel/smp.c: Convert cpu_online_map and cpu_possible_map
+	to cpumask_t. 
+	(__cpu_up): Use copy_process() instead of do_fork() to manually fork
+	idle task on cpu.
+	(start_secondary): Setup VBR properly for secondary cpu, and also
+	increment cpus_booted.
+	(stop_this_cpu): cpu_relax() in busy loop.
+
+	* include/asm-sh/spinlock.h: Add a RW_LOCK_BIAS definition, update
+	RW_LOCK_UNLOCKED to initialize the counter with the bias.
+	(rwlock_is_locked): Use atomic_read() to look at counter value.
+	(_raw_write_trylock): New function. Mostly cloned from x86_64.
+
+	* include/asm-sh/smp.h (cpu_online, cpu_possible): Use cpu_isset()
+	to work with new cpumask_t types for the maps.
+	(num_online_cpus): Removed.
+
+2003-08-31  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/entry.S (sys_call_table): Add fadvise64_64 syscall.
+	* arch/sh/kernel/sys_sh.c (sys_fadvise64_64_wrapper): New.
+	* include/asm-sh/unistd.h: Add fadvise64_64 syscall.
+
+2003-08-27  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/net/Kconfig: Kill off CONFIG_8139TOO_DREAMCAST.
+	* drivers/net/8139too.c: Likewise. Get rid of SEGABBA references,
+	use RTL8139 instead. Also use USE_BUF16K for rx ring buffer size
+	selection.
+
+2003-08-25  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/drivers/dma/Makefile, arch/sh/drivers/dma/dma-api.c,
+	arch/sh/drivers/dma/Kconfig, arch/sh/drivers/dma/dma-pvr2.c,
+	arch/sh/drivers/dma/dma-sh.[ch]: Added new DMA subsystem with
+	drivers for the SH DMAC and the DC PVR2.
+
+	* arch/sh/kernel/cpu/Makefile: Remove dma.c.
+	* arch/sh/kernel/cpu/dma.c: Deleted.
+
+	* arch/sh/mm/Makefile: Add rule for pg-dma.c.
+	* arch/sh/mm/pg-dma.c: Added. This implemented optimized versions
+	of copy_page() and clear_page() using the SH DMAC (selectable with
+	CONFIG_DMA_PAGE_OPS).
+	* arch/sh/mm/clear_page.S (clear_page): Renamed to clear_page_slow.
+	* arch/sh/mm/copy_page.S (copy_page): Renamed to copy_page_slow.
+	* arch/sh/mm/init.c: Add copy_page/clear_page function pointers,
+	assign these to the _slow routines at startup, override them later
+	when something better (ie, DMA) comes along.
+	
+	* include/asm-sh/dma.h: Rewritten entirely.
+	* include/asm-sh/page.h: Fixup copy/clear_page definitions.
+	* include/asm-sh/processor.h (cpu_relax): Get rid of the barrier()
+	wrapper, use sleep instead, this tends to be more friendly when
+	it comes to power consumption, and gives us something meaningful
+	to do in a busy loop.
+
+2003-08-23  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/pci/pci.c (pcibios_enable_device): Use pci_name() instead
+	of dev->dev.name/slot_name.
+	(pcibios_set_master): Likewise.
+	
+	* arch/sh/vmlinux.lds.S: Moved ..
+	* arch/sh/kernel/vmlinux.lds.S: here.
+
+	* arch/sh/boot/compressed/Makefile: Fixup vmlinux.lds.s path.
+
+	* Makefile, arch/sh/kernel/Makefile, drivers/Makefile,
+	drivers/char/keyboard.c, drivers/ide/Kconfig,
+	drivers/ide/pci/alim15x3.c, drivers/mtd/maps/Kconfig,
+	drivers/net/8139too.c, drivers/net/Kconfig,
+	drivers/pcmcia/hd64465_ss.c, fs/nfs/inode.c,
+	include/linux/mm.h, include/linux/pci_ids.h,
+	kernel/timer.c, mm/memory.c: Merge 2.6.0-test4.
+
+2003-08-22  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/Kconfig: Rename BOOT_LINK_ADDR to BOOT_LINK_OFFSET.
+	* arch/sh/boot/compressed/Makefile: Likewise.
+
+2003-08-14  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/Kconfig: Add BOOT_LINK_ADDR. Add '0x' prefix to hex
+	parameters.
+	* arch/sh/Makefile: Remove bzImage target.
+	* arch/sh/boot/Makefile: Likewise.
+	* arch/sh/boot/compressed/Makefile: Likewise. Compute IMAGE_OFFSET
+	with BOOT_LINK_ADDR option.
+	* arch/sh/configs/defconfig-adx: Add '0x' prefix to hex	parameters.
+	* arch/sh/configs/defconfig-cqreek: Likewise.
+	* arch/sh/configs/defconfig-dreamcast: Likewise.
+	* arch/sh/configs/defconfig-se7751: Likewise.
+
+2003-08-11  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/Makefile: Add bzImage support.
+	* arch/sh/boot/Makefile: Likewise.
+	* arch/sh/boot/compressed/Makefile: Likewise.
+	* arch/sh/boot/compressed/head.S: Likewise. Revived.
+
+2003-08-09  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/defconfig, arch/sh/boards/dreamcast/pci.c,
+	arch/sh/boards/mpc1211/pci.c, arch/sh/boards/overdrive/galileo.c,
+	arch/sh/configs/defconfig-adx, arch/sh/configs/defconfig-cqreek,
+	arch/sh/mm/cache-sh2.c, arch/sh/mm/cache-sh3.c,
+	drivers/char/tty_io.c, drivers/char/watchdog/shwdt.c,
+	drivers/ide/Kconfig, drivers/ide/pci/alim15x3.c,
+	drivers/net/8139too.c, drivers/net/Kconfig, drivers/pci/pci.ids,
+	drivers/serial/Kconfig, include/asm-sh/processor.h,
+	include/linux/pci_ids.h, mm/memory.c: Merge 2.6.0-test3.
+
+2003-08-05  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add CONFIG_PCI_AUTO_UPDATE_RESOURCES to
+	have the PCI auto code update BARs automatically. This is
+	the default for just about everyone, read the help text for
+	more information.
+
+	* arch/sh/kernel/pci.c (pcibios_init): Remove pcibios_fixup().
+	(pcibios_update_resource): Use pci_name() to access dev->slot_name.
+	(pcibios_enable_device): Same here.
+
+	* arch/sh/kernel/pci_auto.c (pciauto_setup_bars): Manually preserve
+	the existing BAR value when trying to figure out the BAR size. Only
+	change the BAR value when CONFIG_PCI_AUTO_UPDATE_RESOURCES is set.
+
+	* arch/sh/boards/dreamcast/pci.c: Rewritten.
+
+	* include/linux/pci_ids.h: Add PCI_DEVICE_ID_SEGA_BBA as well as
+	PCI_VENDOR_ID_SEGA.
+
+2003-08-04  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Makefile: Add arch/sh/pci/.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c: Moved to arch/sh/pci/.
+	* arch/sh/kernel/cpu/sh4/pci-st40.[ch]: Same here.
+
+2003-08-02  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/cchips/hd6446x/hd6446{1,5}/io.c (hd6446{1,5}_insb,
+	hd6446{1,5}_insw, hd6446{1,5}_insl, hd6446{1,5}_outsb,
+	hd6446{1,5}_outsw, hd6446{1,5}_outsl): Deleted. Use the generic
+	functions.
+	
+	* arch/sh/cchips/hd6446x/hd6446{1,5}/setup.c: Cleanup irq
+	return values for new API.
+
+	* include/asm-sh/hd6446{1,5}/io.h: Remove unused I/O functions.
+
+	* arch/sh/boards/snapgear/io.c (snapgear_insb, snapgear_insw,
+	snapgear_outsb, snapgear_outsw): Deleted. We can use the
+	generic functions here as well.
+
+	* include/asm-sh/snapgear/io.h: Remove unused I/O functions.
+
+	* arch/sh/boards/se/77{0x,51}/io.c (se_readb, se_readw, se_readl,
+	se_writeb, se_writew, se_writel): Deleted. We can use the
+	generic interface for this instead.
+
+	* arch/sh/boards/se/77{0x,51}/mach.c: Remove the aforementioned
+	I/O functions + c99 initializers.
+
+	* include/asm-sh/se{,7751}/io.h: Remove unused I/O functions.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c
+	(sh7751_pci_read, sh7751_pci_write): Do general cleanup,
+	simplify read and write operations in general. Fixes a
+	bug with getting bogus data back on my 7751R board.
+
+2003-08-01  Paul van Gool  <pvangool@mimotech.com>
+
+	* arch/sh/boards/se/7751/pci.c: Should allow for more than
+	1 PCI device. Changed last devfn from 1 to 0xff.
+
+2003-07-31  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Makefile, arch/sh/boards/snapgear/Makefile,
+	arch/sh/boards/snapgear/io.c, arch/sh/boards/snapgear/pci.c
+	arch/sh/boards/snapgear/rtc.c, arch/sh/boards/snapgear/setup.c,
+	arch/sh/tools/mach-types, drivers/net/8139too.c,
+	include/asm-sh/irq.h, include/asm-sh/mc146818rtc.h,
+	include/asm-sh/pci.h, include/asm-sh/rtc.h,
+	include/asm-sh/snapgear/io.h: Add SecureEdge5410 support.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c: Ported to new PCI Auto
+	API.
+
+2003-07-31  Paul van Gool  <pvangool@mimotech.com>
+
+	* arch/sh/boards/se/7751/pci.c: Added empty pcibios_fixup
+	function. Added pci_channel definition for SE7751(R) board.
+
+2003-07-29  Paul Mundt  <lethal@linux-sh.org>
+
+	* include/asm-sh/bigsur/io.h, include/asm-sh/mpc1211/io.h,
+	include/asm-sh/hd64465/io.h, include/asm-sh/overdrive/io.h,
+	include/asm-sh/hd64461/io.h, include/asm-sh/adx/io.h,
+	include/asm-sh/ec3104/io.h, include/asm-sh/cat68701/io.h,
+	include/asm-sh/dreamcast/io.h, include/asm-sh/se/io.h,
+	include/asm-sh/saturn/io.h, include/asm-sh/sh2000/io.h,
+	include/asm-sh/se7751/io.h: Kill off I/O definitions and
+	general __WANT_IO_DEF mess, we grab these implicitly through
+	the machvec now.
+
+	* include/asm-sh/io.h: Bit of a policy change, we now force
+	_everything_ through the machine vector. Each board already
+	provides its own definitions for what it wants, there's no
+	reason to have to repeat this in every board's io.h.
+
+	(__set_io_port_base): Added. We use this for setting a
+	common port base that can then be used by the generic
+	isa_port2addr implementation.
+
+	* arch/sh/kernel/setup.c (sh_mv_setup): Wrap the mv_io_base
+	assignment to use __set_io_port_base().
+
+	* arch/sh/boards/dreamcast/Makefile: Remove io.c
+	* arch/sh/boards/dreamcast/setup.c: Get rid of dreamcast
+	specific isa_port2addr implementation, we use the generic
+	one now.
+
+	(platform_setup): Init the port base with __set_io_port_base().
+
+	* arch/sh/boards/dreamcast/io.c: Deleted.
+
+	* include/asm-sh/dreamcast/io.h: Deleted.
+
+2003-07-28  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/char/watchdog/shwdt.c (sh_wdt_open): Get rid of
+	MOD_INC_USE_COUNT. Use __module_get() for module refcounting
+	instead.
+
+	* arch/sh/kernel/setup.c (setup_arch): Get rid of machvec
+	setup code.
+	(sh_mv_setup): Added. Move setup code here. Also walk the
+	sh_mv and manually load up generic routines for anything
+	that board-specific code hasn't filled in.
+
+	* arch/sh/boards/dreamcast/Makefile: Remove mach.c
+	* arch/sh/boards/dreamcast/mach.c: Deleted.
+	* arch/sh/boards/dreamcast/setup.c: Move mv definition here,
+	also clean it up for the new changes.
+
+	* arch/sh/boards/saturn/Makefile: Remove mach.c
+	* arch/sh/boards/saturn/mach.c: Deleted.
+	* arch/sh/boards/saturn/setup.c: Follow the dreamcast change
+	here as well.
+
+	* arch/sh/boards/mpc1211/Makefile: Remove mach.c
+	* arch/sh/boards/mpc1211/rtc.c (mpc1211_time_init): Added.
+	Wrap rtc definitions to rtc_{get,set}_time, and init them
+	properly.
+	* arch/sh/boards/mpc1211/setup.c: Add rtc timer init code,
+	and follow the other boards for mv changes.
+	* arch/sh/boards/mpc1211/mach.c: Deleted.
+
+	* arch/sh/boards/cqreek/Makefile, arch/sh/boards/cqreek/mach.c,
+	arch/sh/boards/cqreek/setup.c: Follow mv changes.
+
+	* arch/sh/boards/sh2000/Makefile, arch/sh/boards/sh2000/mach.c,
+	arch/sh/boards/sh2000/setup.c: Follow mv changes.
+
+	* arch/sh/boards/hp6xx/hp680/mach.c: Remove generic_ and
+	sh_rtc_xxx references, since this is handled for us now.
+	* arch/sh/boards/hp6xx/hp690/mach.c: Same here.
+
+	* arch/sh/boards/overdrive/mach.c: And here.
+
+	... and the same for the rest of the boards, so we won't bother
+	listing them all here again. Look at linuxsh-cvs for this date
+	if you really care.
+
+	* include/asm-sh/machvec.h: Remove several unused functions.
+
+2003-07-28  Paul van Gool  <pvangool@mimotech.com>
+
+	* arch/sh/configs/defconfig-se7751: Added new 2.6.0-test2 
+	config settings:
+
+	CONFIG_IOSCHED_AS
+	CONFIG_IOSCHED_DEADLINE
+	CONFIG_LBD
+
+2003-07-27  Paul van Gool  <pvangool@mimotech.com>
+
+	* include/asm-sh/pci-sh7751.h: Re-added in order to add
+	SH7751R_DEVICE_ID definition.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c: Initialized mask
+	variable to prevent compiler from complaining.
+
+	Changed PCIDBG statement to use new variable name instead
+	of old Linux 2.4 one.
+
+	Changed PCI hardware check to also check for 7751R hardware
+	and not just 7751.
+
+2003-07-27  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/Makefile, arch/sh/mm/init.c,
+	drivers/ide/Kconfig, drivers/net/8139too.c, drivers/net/Kconfig,
+	drivers/pci/pci.ids, drivers/serial/Kconfig,
+	drivers/serial/Makefile, drivers/video/Makefile, fs/nfs/inode.c,
+	include/linux/pci_ids.h, kernel/time.c: Merge 2.6.0-test2.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c: Merge changes from
+	mainline with a few fixes.
+
+	 (pcibios_allocate_resources): Deprecate pci_for_each_dev(),
+	 use pci_find_device() instead.
+	 (pcibios_assign_resources): Same here.
+
+	* arch/sh/kernel/setup.c: Use asm/sections.h.
+	* arch/sh/kernel/traps.c: Same here.
+
+	* arch/sh/configs/defconfig-dreamcast: Update defconfig.
+
+	* include/asm-sh/local.h: New file.
+	* include/asm-sh/sections.h: New file.
+
+2003-07-27  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/kernel/ptrace.c: Fix single step.
+
+2003-07-26  Paul van Gool  <paul.vangool@rinconnetworks.com>
+
+	* arch/sh/Makefile: Fix for defconfig-% rules when there's no
+	prior .config.
+	
+	* arch/sh/configs/defconfig-se7751: Add SE7751 defconfig.
+
+2003-07-25  Paul Mundt  <lethal@linux-sh.org>
+
+	* Documentation/sh/new-machine.txt: Added documentation on how to
+	work with the new tree.
+
+2003-07-22  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add KGDB options back in.
+
+	* arch/sh/configs/defconfig-dreamcast: Update DC defconfig.
+
+	* arch/sh/Makefile: Add support for building a defconfig out of
+	arch/sh/configs/. Also add a 'make help' text for SH. And finally,
+	also rename cpu- to cflags- to make the KGDB options look a bit
+	saner.
+
+	Builds for provided defconfigs can now be launched in the format
+	of: 'make defconfig-$(boardname)' followed by vmlinux/zImage/etc.
+
+2003-07-21  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpu/sh4/Makefile: Remove irq_intc2.o for generic
+	7751 builds, leave this as ST40 specific for now.
+
+	* arch/sh/Kconfig: Get rid of CONFIG_PCI_BIOS cruft.
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c: Same here (forward port of
+	changes from David Woodhouse against 2.4 branch).
+
+	* arch/sh/Makefile: Link in arch/sh/lib/ before any of the other
+	libs-y directories.
+
+	* arch/sh/lib/Makefile: Add div64-generic.o
+	* arch/sh/lib/div64-generic.c: New file. Provide a compliant
+	__div64_32 interface that wraps to our __xdiv64_32.
+
+	* include/asm-sh/div64.h (do_div): Removed. Wrap to the generic
+	interface at asm-generic/div64.h instead.
+
+2003-07-19  Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/video/pvr2fb.c: Rewrite. Use the hardware palette, and add
+	support for PCI-based PVR2 boards (such as the neon250 in my case).
+
+2003-07-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/entry.S (sys_call_table): Add new syscalls.
+	* arch/sh/kernel/irq.c (do_IRQ): Use kstat_this_cpu.
+	* include/asm-sh/hardirq.h (irq_cpustat_t): Remove unused members.
+	* include/asm-sh/unistd.h: Add new syscalls.
+
+2003-07-17  Paul Mundt  <lethal@linux-sh.org>
+
+	Merge with 2.5.74 ... 2.6.0-test1.
+
+2003-07-16  Paul Mundt  <lethal@linux-sh.org>
+
+	* include/asm-sh/segment.h: Re-added (some headers unfortunately still
+	seem to require this..).
+	* include/asm-sh/cache.h: Fixup L1_CACHE_BYTES definition (use the shift
+	defined per-cpu family).
+	* include/asm-sh/cpu-sh2/cache.h: Remove L1_CACHE_BYTES definition, and
+	add a L1_CACHE_SHIFT definition instead.
+	* include/asm-sh/cpu-sh3/cache.h: Same here.
+	* include/asm-sh/cpu-sh4/cache.h: and here.
+
+2003-07-15  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/mm/cache-sh4.c: Add a cpu flag for p2 cache restriction
+	for users who need it (7750, 7750S/7750R?) and test that instead
+	of the subtype.
+
+	* include/asm-sh/processor.h: Define CPU_HAS_P2_FLUSH_BUG.
+
+2003-07-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/entry.S (sys_call_table): Add new syscalls.
+	* arch/sh/kernel/irq.c (__report_bad_irq, report_bad_irq): New.
+	(noirqdebug_setup): Likewise.
+	(note_interrupt): Likewise.
+	(do_IRQ): Call note_interrupt if required.
+	* arch/sh/kernel/module.c (module_arch_cleanup): new.
+	* arch/sh/mm/fault.c (do_page_fault): Use in_atomic.  Use
+	VM_FAULT_xxx symbolic constants.  Use fixup_exception.
+	* arch/sh/mm/ioremap.c: Fix so to follow i386 changes.
+	* drivers/char/sh-sci.c (sci_hungup, sci_close): Add again.
+	(sci_real_drive): Add sci_hungup and sci_close.
+	(sci_rx_interrupt): Return IRQ_HANDLED.
+	(sci_tx_interrupt, sci_br_interrupt, sci_br_interrupt): Likewise.
+	(sci_init_drivers): Change return type of handlers.
+	* drivers/net/stnic.c (do_stnic_intr):  Return the result of
+	ei_interrupt.
+	* include/asm-sh/hardirq.h: Remove commented out part.
+	* include/asm-sh/pgalloc.h (pte_alloc_one_kernel): Use
+	__GFP_REPEAT feature.
+	(pte_alloc_one): Likewise.
+	* include/asm-sh/unistd.h: Update for new syscalls.
+
+2003-07-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/system.h (switch_to): Set LAST properly.
+
+2003-07-06  Dominik Brodowski  <linux@brodo.de>
+	    Paul Mundt  <lethal@linux-sh.org>
+
+	* drivers/pcmcia/hd64465_ss.c: Update for new PCMCIA API.
+
+2003-06-29  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig, drivers/serial/Kconfig, drivers/serial/Makefile,
+	drivers/char/keyboard.c, fs/nfs/inode.c, include/linux/highmem.h,
+	include/linux/input.h, include/linux/pci_ids.h, kernel/timer.c,
+	Makefile: Merge 2.5.73.
+
+	* arch/sh/Kconfig, arch/sh/kernel/time.c, drivers/char/keyboard.c,
+	drivers/ide/Kconfig, include/linux/input.h, kernel/sysctl.c,
+	kernel/time.c, kernel/timer.c, Makefile: Merge 2.5.72.
+
+2003-06-15  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/kernel/irq.c, arch/sh/lib/Makefile,
+	drivers/Makefile, drivers/char/Makefile,
+	drivers/char/generic_serial.c, drivers/char/sh-sci.c,
+	drivers/char/tty_io.c, drivers/ide/Kconfig, drivers/mtd/mtdcore.c,
+	drivers/mtd/mtdpart.c, drivers/mtd/chips/cfi_cmdset_0002.c,
+	drivers/mtd/chips/jedec_probe.c, drivers/mtd/maps/Kconfig,
+	drivers/mtd/maps/Makefile, drivers/mtd/maps/solutionengine.c,
+	drivers/net/8139too.c, drivers/net/Kconfig, drivers/pci/pci.ids,
+	drivers/serial/Kconfig, drivers/serial/Makefile,
+	drivers/video/Kconfig, drivers/video/Makefile, include/asm-sh/bug.h,
+	include/asm-sh/pci.h, include/linux/highmem.h,
+	include/linux/pci_ids.h, include/linux/mtd/partitions.h,
+	kernel/sys.c, kernel/sysctl.c, kernel/time.c, kernel/timer.c,
+	mm/memory.c: Merge 2.5.71.
+
+2003-06-13  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpu/dma.c: Fix up exports so modules can use dma
+	functions without resulting in undefined symbols.
+
+2003-06-01  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/irq.c (handle_IRQ_event): Check handler return value,
+	also report if no one cared about the interrupt.
+
+2003-05-27  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/mm/init.c, drivers/Makefile,
+	  drivers/char/keyboard.c, drivers/char/sh-sci.c,
+	  drivers/char/sysrq.c, drivers/char/tty_io.c,
+	  drivers/net/8139too.c, drivers/net/Kconfig,
+	  drivers/pci/pci.ids, drivers/video/fbmem.c
+	  fs/locks.c, fs/nfs/inode.c, include/linux/elf.h,
+	  include/linux/input.h, include/linux/mm.h,
+	  include/linux/pci_ids.h, kernel/sys.c, kernel/sysctl.c,
+	  kernel/timer.c, mm/memory.c: Merge 2.5.70.
+
+	* include/asm-sh/elf.h: Move ELF relocation definitions here.
+
+	* arch/sh/kernel/process.c (kernel_thread): Use the new do_fork() API.
+	(sys_clone, sys_fork, sys_vfork) : Same here.
+
+	* arch/sh/kernel/cpu/dma.c (dma_err, dma_tei): Use new irq API.
+
+2003-05-24  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add note for CONFIG_SH_WDT about HZ scaling.
+
+	* drivers/char/watchdog/shwdt.c: General updates.. add note about
+	HZ scaling here as well.
+
+	* drivers/serial/Kconfig: Add SCI definitions.
+	* drivers/serial/Makefile: Same here.
+
+	* drivers/serial/sh-sci.c, drivers/serial/sh-sci.h: Add rewrite
+	of SH-SCI driver for new serial API.
+
+	* include/asm-sh/param.h: Set HZ to 1000 when the WDT is enabled.
+
+	* include/asm-sh/watchdog.h: Move cpu-specific functions and
+	definitions out of the way.
+	* include/asm-sh/cpu-sh[234]/watchdog.h: .. and put them here.
+
+	* arch/sh/kernel/pci.c (pcibios_align_resource): Define this as a
+	weak symbol, so we can override it.
+
+	* arch/sh/boards/mpc1211/pci.c (pcibios_align_resource): Added.
+
+2003-05-19  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/setup.c (topology_init): Added.
+	(c_start, c_next): Add support for NR_CPUS > 1.
+
+	* arch/sh/kernel/cpu/sh4/pci-st40.c: Cleanup irq handler return type.
+
+	* arch/sh/cchips/hd6446x/hd64465/gpio.c: Various cleanups.. modules,
+	resource allocation, etc. Also fixup irq handler return type.
+
+	* drivers/video/pvr2fb.c: Further cleanups.
+
+	* include/asm-sh/machvec.h: Get rid of machvec machtype tracking,
+	do this dynamically through the new mach-type generation interface.
+
+	* arch/sh/boards: Get rid of all mv_hw_* references.
+
+	* arch/sh/Makefile: Add rule to build arch/sh/tools.
+
+	* arch/sh/tools/Makefile, arch/sh/tools/machgen.sh,
+	  arch/sh/tools/mach-types: Added.
+
+	This completes the initial mach-type generation code. From now on,
+	definitions that previously were hardcoded in machvec.h will be
+	automatically generated as include/asm-sh/machtypes.h.
+
+2003-05-17  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpufreq.c (sh_cpufreq_setstate): Add rudimentary SMP
+	support, also verify that CPU is online.
+	(sh_cpufreq_cpu_init): Remove the policy->cpu != 0 check, look at
+	cpu_online() instead.
+
+2003-05-16  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/setup.c (scif_sercon_device): Remove.
+	* arch/sh/kernel/time.c (timer_interrupt): Use irqreturn_t for return
+	type.
+	* arch/sh/kernel/Makefile: Make SH cpufreq driver independant of
+	cpufreq core. Use CONFIG_SH_CPU_FREQ instead.
+	* arch/sh/kernel/cpufreq.c: Rewritten for new API.
+
+	* arch/sh/Kconfig: Add cpufreq definitions.
+
+	* include/asm-sh/thread_info.h: Drop redefinition of TI_PRE_COUNT.
+
+2003-05-16  Saito.K  <ksaito@interface.co.jp>
+
+	* arch/sh/Kconfig: Add mpc1211 support.
+	* arch/sh/Makefile: Add mpc1211 support.
+	* arch/sh/vmlinux.lds.S: Add mpc1211 support.
+
+	* arch/sh/boards/mpc1211/Makefile: New file.
+	* arch/sh/boards/mpc1211/io.c: New file.
+	* arch/sh/boards/mpc1211/led.c: New file.
+	* arch/sh/boards/mpc1211/mach.c: New file.
+	* arch/sh/boards/mpc1211/pci.c: New file.
+	* arch/sh/boards/mpc1211/rtc.c: New file.
+	* arch/sh/boards/mpc1211/setup.c: New file.
+
+	* arch/sh/kernel/sh_ksyms.c (memscan, __copy_user, __udivdi3,
+	__flush_purge_region, __down_trylock): Add to exported symbols.
+
+	* drivers/char/keyboard.c: Add mpc1211 support.
+
+	* drivers/ide/Kconfig: Add mpc1211 support.
+	* drivers/ide/pci/alim15x3.c: Add mpc1211 support.
+
+	* drivers/mtd/chips/jedec_probe.c: Add Fujitsu MBM29F040C support.
+
+	* drivers/mtd/maps/Kconfig: Add mpc1211 support.
+	* drivers/mtd/maps/Makefile: Add mpc1211 support.
+	* drivers/mtd/maps/mpc1211.c: Add mpc1211 support.
+
+	* drivers/video/Kconfig: Add Chips 69000 display support.
+	* drivers/video/Makefile: Add Chips 69000 display support.
+	* drivers/video/asiliantfb.c: New file.
+	* drivers/video/fbmem.c: Add Chips 69000 display support.
+
+	* include/asm-sh/dma.h: Add mpc1211 support.
+	* include/asm-sh/floppy.h: New file.
+	* include/asm-sh/irq.h: Add mpc1211 support.
+	(irq_canonicalize): here as an inline function.
+	* include/asm-sh/keyboard.h: Add mpc1211 support.
+	* include/asm-sh/machvec.h: Add mpc1211 support.
+	* include/asm-sh/mc146818rtc.h: Add mpc1211 support.
+
+	* include/asm-sh/mpc1211/dma.h: New file.
+	* include/asm-sh/mpc1211/io.h: New file.
+	* include/asm-sh/mpc1211/keyboard.h: New file.
+	* include/asm-sh/mpc1211/m1543c.h: New file.
+	* include/asm-sh/mpc1211/mc146818rtc.h: New file.
+	* include/asm-sh/mpc1211/mpc1211.h: New file.
+	* include/asm-sh/mpc1211/pci.h: New file.
+
+	* include/asm-sh/pci.h: Add mpc1211 support.
+	(sg_dma_address): Fix typo.
+	* include/asm-sh/scatterlist.h: Copy from kernel.org.
+
+	* include/linux/pci_ids.h: Add Chips 69000 display support.
+
+2003-05-12  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/boards/Makefile: Removed.
+	* arch/sh/Makefile: Include top-level .config for rules that don't set
+	include_config in the top-level Makefile. (ie, make clean/mrproper).
+
+2003-05-12  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/boards/Makefile: New file.
+
+2003-05-10  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* include/asm-sh/cpu-sh4/cache.h (CCR_CACHE_EMODE): Defined.
+	* arch/sh/mm/cache-sh4.c (detect_cpu_and_cache_system): Check CCR_CACHE_EMODE setting.
+	(__flush_dcache_all_ex): New function.
+	(__flush_cache_4096_all_ex): New function.
+	(flush_cache_4096_all): Moved from clear_page.S, changed for 2-way cache.
+	(flush_icache_range): Do flush-cache-all.
+	(flush_cache_sigtramp): Don't use flush_icache_range for efficiency.
+	(flush_cache_all): Check cache ways and use relevant function.
+	(flush_dcache_page): Reverted to previous version (2.4.20).
+	(__flush_cache_page): Likewise.
+	(flush_cache_range): External function declaration moved to the top.
+	* arch/sh/mm/clear_page.S (__clear_user): Bug fix from 2.4 branch.
+	(flush_cache_4096_all): Renamed to __flush_cache_4096_all.
+	* arch/sh/mm/init.c (sh_cache_init): Don't change CCR_CACHE_EMODE bit of CCR.
+
+	* arch/sh/Makefile: Follow i386 changes.
+	* arch/sh/boot/compressed/Makefile: Likewise.
+	* arch/sh/boot/Makefile: Restored and follow i386 changes.
+	* arch/sh/boot/compressed/vmlinux.scr: New.
+	* arch/sh/.cvsignore: ignore vmlinux.lds.s
+	* arch/sh/boot/compressed/.cvsignore: Add sub-target files.
+
+	* include/asm-sh/bug.h: Restore and follow i386 changes.
+	* mm/memory.c: Follow 2.5.69.
+	* include/net/inet_ecn.h: Removed.
+	* include/asm-sh/ide.h (ide_init_default_hwifs): Bug fix from 2.4 branch.
+	* include/asm-sh/kmap_types.h: Follow i386 changes.
+
+2003-05-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/lib/udivdi3.c: New file.
+	* arch/sh/lib/Makefile (obj-y): Add udivdi3.o.
+
+2003-05-07  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpu/sh4/pci-sh7751.c (pci_conf1_read): General
+	cleanup. Should now build and read values correctly.
+	* arch/sh/kernel/cpu/sh4/pci-st40.c (st40pci_read): Same here.
+
+	* arch/sh/mm/cache-sh4.c (flush_icache_range): Clear out valid
+	bit for each way in the icache.
+
+	* drivers/video/Makefile: Make pvr2fb use cfb files.
+	* drivers/video/pvr2fb.c: Updates.
+
+2003-05-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+	    Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile  (CFLAGS): Use -O1 to avoid miss compiling by gcc-3.2.
+	(core-y): Add usr/.
+
+	* arch/sh/Makefile (LDFLAGS_BLOB): Define.
+
+	* arch/sh/kernel/cpu/rtc.c (sh_rtc_gettimeofday): Don't make
+	overflow.
+	* arch/sh/kernel/entry.S: Add gUSA support.  Call syscall_tail
+	only when returning from fork.  Add new syscalls.
+	* arch/sh/kernel/io_7751se.c: Fix typo.
+	* arch/sh/kernel/io_se.c (delay): Wait more.
+	* arch/sh/kernel/irq.c: Follow i386 changes.
+	* arch/sh/kernel/module.c: Rewriting.
+	* arch/sh/kernel/process.c (kernel_thread_helper): New.
+	(kernel_thread): Use kernel_thread_helper.  Return error value also.
+	(dump_task_regs, dump_task_fpu): New.
+	(copy_thread): Handle CLONE_SETTLS flag and initialize child tids.
+	(__switch_to): Return PREV pointer.
+	(sys_clone): Handle tid pointers.
+	* arch/sh/kernel/ptrace.c: Cleanup and follow i386 changes.
+	* arch/sh/kernel/signal.c (handle_signal): Add gUSA support.
+	(do_signal): Handle ERESTART_RESTARTBLOCK case.
+	* arch/sh/kernel/sys_sh.c (sys_ipc): Use sys_semtimedop and
+	handle SEMTIMEDOP.
+	* arch/sh/kernel/time.c (TICK_SIZE): Use tick_nsec.
+	(do_gettimeoffset): Lock critical region.
+	(do_gettimeofday): Follow i386 changes.
+	(time_init): Override tick_nsec here.
+
+	* arch/sh/lib/Makefile (obj-y): Add div64.o.
+	* arch/sh/lib/div64.S: New file.
+
+	* arch/sh/mm/cache-sh2.c (detect_cpu_and_cache_system): Use
+	SH_CACHE_* instead of CACHE_* because CACHE_VALID collides with
+	the one in NFS header file.
+	* arch/sh/mm/cache-sh3.c (detect_cpu_and_cache_system): Likewise.
+	(__flush_wback_region): Likewise.
+	(__flush_purge_region): Likewise.
+	* arch/sh/mm/cache-sh4.c (flush_cache_4096): Likewise.
+	* arch/sh/mm/init.c (sh_cache_init): Likewise.
+	* arch/sh/mm/extable.c (fixup_exception): New.
+	* arch/sh/mm/tlb-sh4.c (update_mmu_cache): Set write through
+	bit of PTEL if CONFIG_SH_WRITETHROUGH defined.
+
+	* drivers/net/stnic.c (ei_interrupet): Change return type.
+
+	* include/asm-sh/byteorder.h (___arch__swab64): New.
+	(__arch__swab64): Define.
+	* include/asm-sh/cache.h: Rename CACHE_* to SH_CACHE_*.
+	* include/asm-sh/delay.h (ndelay): Define.
+	* include/asm-sh/div64.h (do_div): Implement a real 64/32-bit
+	division.
+	* include/asm-sh/elf.h: Follow i386 change.
+	* include/asm-sh/hardirq.h: Likewise.
+	* include/asm-sh/ide.h: Include generic definitions.
+	* include/asm-sh/ipc.h (SEMTIMEDOP): Define.
+	* include/asm-sh/module.h (MODULE_PROC_FAMILY): Define.
+	* include/asm-sh/param.h: Follow i386 changes.
+	* include/asm-sh/pci.h (pci_map_sg): Fix dma_address in loop.
+	(pci_dma_sync_sg): Likewise.
+	* include/asm-sh/pgtable.h: Change _PAGE_FILE to 0x80 and drop this
+	bit from _PAGE_FLAGS_HARDWARE_MASK.
+	* include/asm-sh/processor.h: Follow i386 changes.
+	* include/asm-sh/ptrace.h: Remove PTRACE_OLDSETOPTIONS and
+	define PTRACE_O_TRACESYSGOOD.
+	* include/asm-sh/rwsem.h: Cut&copy from i386.
+	* include/asm-sh/semaphore.h: Follow i386 changes.
+	* include/asm-sh/thread_info.h: Follow i386 changes.
+	(struct thread_info): Make CPU and PREEMPT_COUNT 32-bit.
+	* include/asm-sh/tlb.h (tlb_start_vma): Call flush_cache_range.
+	(tlb_end_vma): Call flush_tlb_range.
+	* include/asm-sh/types.h: Follow i386 changes.
+	* include/asm-sh/uaccess.h: Remove fixup_exception.
+	* include/asm-sh/unistd.h: Define new system call numbers.
+
+	* include/linux/elf.h: Define SH relocation types.
+
+	* kernel/timer.c (tick_sec): Don't use static initializer.
+	(tick_nsec): Likewise.
+	(init_timers): Initialize tick_sec and tick_nsec here.
+
+2003-05-05  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/setup.c (sh_console_device): Removed.
+
+	* drivers/char/sh-sci.c: General tty cleanup, get rid of minor() and
+	mk_kdev() usage.
+	
+	* drivers/video/hitfb.c (hitfb_init): fb_info.node cleanups, get rid
+	of NODEV and minor().
+	* drivers/video/pvr2fb.c (pvr2fb_interrupt): Use new irqreturn_t type.
+	(pvr2fb_init): get rid of NODEV and minor().
+
+	* include/asm-sh/pgalloc.h (pte_alloc_one_kernel): Use __GFP_REPEAT
+	for pte allocation.
+
+	Merge 2.5.69.
+
+2003-05-01  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S (ret_from_fork): Add back in. Invoke
+	schedule_tail(), since its not just for SMP anymore.
+	* arch/sh/kernel/traps.c (dump_stack): Added.
+	* arch/sh/kernel/module.c: New file.
+
+	* include/asm-sh/module.h: Rework for new module interface.
+
+2003-04-22  Paul Mundt  <lethal@linux-sh.org>
+
+	Merge with 2.5.67 and 2.5.68.
+
+2003-04-18  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/mm/clear_page.S (__flush_cache_4096): Revert previous change
+	and modified for efficiency.
+
+2003-04-17  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/mm/clear_page.S (__flush_cache_4096): Don't change associated
+	data that is to be flushed.
+
+2003-04-01  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Move the CONFIG_MMU option further down and
+	add some rudimentary help text.
+
+	* arch/sh/vmlinux.lds.s: Add __param and __initramfs sections.
+
+	* arch/sh/kernel/entry.S: Deprecate sys_create_module,
+	sys_query_module, and sys_get_kernel_syms.
+
+	* arch/sh/mm/extable.c (search_extable): Added. Use the unified
+	extable handling code.
+	(search_one_table, search_exception_table): Removed.
+	* arch/sh/mm/fault.c (do_page_fault): Use the unified extable
+	search.
+	* arch/sh/kernel/traps.c (die_if_no_fixup): Same here.
+
+	* include/asm-sh/uaccess.h (search_exception_table): Removed.
+
+	* drivers/block/rd.c: Include linux/mm.h for page_address().
+
+2003-03-31  Paul Mundt  <lethal@linux-sh.org>
+
+	* include/asm-sh/pgtable.h (pte_file, pte_to_pgoff,
+	pgoff_to_pte): Added. Also set PTE_FILE_MAX_BITS.
+
+	* drivers/char/watchdog/shwdt.c: Cleanup.
+
+	* drivers/video/pvr2fb.c: Further API fixes.
+
+	Merge with 2.5.62 ... 2.5.66.
+
+2003-03-30  Paul Mundt  <lethal@linux-sh.org>
+
+	Merge with 2.5.47 ... 2.5.61.
+
+2003-03-29  Paul Mundt  <lethal@linux-sh.org>
+
+	Merge with 2.5.46.
+
+2003-03-24  Daniel Jacobowitz  <drow@false.org>
+	    Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* arch/sh/kernel/ptrace.c (ubc_set_tracing): Break before executing
+	instruction.
+
+2003-03-24  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/kernel/entry.S: Call sys_pread_wrapper/sys_pwrite_wrapper
+	instead of sys_pread64/sys_pwrite64.
+	* arch/sh/kernel/sys_sh.c (sys_pread_wrapper,sys_pwrite_wrapper):
+	New function.
+
+	* arch/sh/mm/copy_page.S (__copy_user): Add missing exception handling
+	point.
+
+2003-01-28  Paul Mundt  <lethal@linux-sh.org>
+
+	* Makefile, arch/sh/Kconfig, drivers/block/rd.c,
+	drivers/Makefile, drivers/char/Makefile,
+	drivers/char/tty_io.c, drivers/net/8139too.c,
+	drivers/net/Kconfig, drivers/video/epson1355fb.c,
+	drivers/video/hitfb.c, drivers/video/pvr2fb.c,
+	include/asm-sh/signal.h, init/do_mounts.c, kernel/ptrace.c,
+	kernel/timer.c, mm/memory.c: Merge 2.5.51.
+
+	* Makefile, drivers/Makefile, drivers/char/Makefile,
+	drivers/pci/pci.ids, include/asm-sh/processor.h,
+	init/do_mounts.c, kernel/ptrace.c, kernel/timer.c: Merge 2.5.50.
+
+	* Makefile, drivers/char/Makefile, drivers/char/Kconfig,
+	drivers/char/tty_io.c, drivers/pcmcia/hd64465_ss.c,
+	fs/nfs/inode.c, fs/mpage.c: Merge 2.5.49.
+
+	* drivers/char/shwdt.c: Move to watchdog/
+
+	* arch/sh/Kconfig, drivers/char/tty_io.c, init/do_mounts.c,
+	drivers/input/keyboard/Kconfig, fs/nfs/inode.c, fs/mpage.c,
+	include/asm-sh/stat.h, include/linux/input.h, kernel/time.c,
+	kernel/timer.c, Makefile: Merge 2.5.48.
+
+	* Makefile, arch/sh/Kconfig, arch/sh/kernel/pci-sh7751.c,
+	arch/sh/kernel/pci_st40.c, drivers/block/rd.c,
+	drivers/char/sh-sci.c, drivers/char/shwdt.c,
+	drivers/char/sysrq.c, drivers/char/tty_io.c,
+	drivers/net/Kconfig, drivers/pci/pci.ids, fs/nfs/inode.c,
+	fs/mpage.c, kernel/timer.c: Merge 2.5.47.
+
+	* Makefile, arch/sh/Kconfig, arch/sh/kernel/irq.c,
+	arch/sh/kernel/process.c, arch/sh/kernel/ptrace.c,
+	drivers/Makefile, drivers/block/rd.c, drivers/char/Makefile,
+	drivers/char/sysrq.c, drivers/net/Kconfig, init/do_mounts.c,
+	include/asm-sh/processor.h, include/asm-sh/ptrace.h,
+	kernel/ptrace.c, kernel/timer.c, mm/memory.c: Merge 2.5.46.
+
+2003-01-16  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add CONFIG_DEBUG_SPINLOCK.
+
+	* arch/sh/kernel/traps.c (per_cpu_trap_init, gdb_vbr_init): Added.
+	(trap_init): Do some generic exception table setup, and wrap to
+	per_cpu_trap_init() to setup boot cpu.
+
+	* include/asm-sh/spinlock.h (_raw_spin_lock, _raw_spin_unlock,
+	_raw_read_lock, _raw_read_unlock, _raw_write_lock,
+	_raw_write_unlock): And preliminary spin/read/write locks.
+
+	Clean up CONFIG_DEBUG_SPINLOCK stuff.
+
+2003-01-15  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/vmlinux.lds.S: Don't use static values for cacheline or
+	page size. Use L1_CACHE_BYTES/PAGE_SIZE accordingly.
+
+2003-01-13  Paul Mundt  <lethal@linux-sh.org>
+
+	* include/asm-sh/uaccess.h (__access_ok, set_fs, get_fs): Added for
+	CONFIG_MMU=n.
+
+2003-01-10  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/entry.S: Wrap sys_madvise and sys_readahead
+	to sys_ni_syscall if !CONFIG_MMU. Fixup exception handling
+	when we don't have an MMU (or if its disabled).
+
+2003-01-09  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Add CONFIG_BINFMT_FLAT.
+
+	* mm/Makefile, mm/filemap.c, mm/mmap.c, mm/nommu.c,
+	mm/page_alloc.c, mm/slab.c, mm/vmscan.c, kernel/fork.c,
+	kernel/sys.c, kernel/sysctl.c, fs/exec.c, fs/locks.c,
+	fs/mpage.c, fs/proc/array.c, fs/proc/base.c,
+	fs/proc/proc_misc.c, drivers/char/mem.c,
+	include/linux/blkdev.h, include/linux/mm.h,
+	include/linux/page-flags.h, include/linux/slab.h,
+	include/linux/swap.h: Merge uClinux 2.5.45-uc1-mm patch.
+
+	* fs/Makefile: Add binfmt_flat.
+	* fs/binfmt_flat.c: New file.
+
+	* include/linux/flat.h: New file.
+  
+2003-01-05  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Makefile: Do a bit of cleaning, and lay the groundwork
+	for include/asm-sh/cpu/
+
+2003-01-01  Paul Mundt  <lethal@linux-sh.org>
+
+	* ChangeLog-2002: New file, move the old one out of the way.
+
+	* arch/sh/boot/compressed/Makefile: Add top-level include dir
+	to CFLAGS/AFLAGS.
+
+	* arch/sh/kernel/process.c (sys_fork): Can't fork() properly
+	with no MMU (at least under uClinux), return -EINVAL instead.
+
+	* arch/sh/mm/Makefile: Build pg-sh4.c for all SH-4, not just
+	ones with an MMU.
+	* arch/sh/mm/tlb-nommu.c (update_mmu_cache): Added.
+
+	* include/asm-sh/bugs.h (check_bugs): Add a default rule for
+	CPU subtype.
+	* include/asm-sh/pgtable.h: Fixup page protection flags for
+	systems without an MMU .. wrap to __pgprot(0).
+	* include/asm-sh/processor.h (save_fpu): Make it work on
+	SH-4 again.
+
+	* include/asm-sh/addrspace.h: Move CPU specific definitions out of
+	the way.. reference asm/cpu/addrspace.h instead.
+	* include/asm-sh/cpu-sh3/addrspace.h,
+	include/asm-sh/cpu-sh4/addrspace.h: Added.
+

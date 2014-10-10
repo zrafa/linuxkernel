@@ -1,0 +1,1827 @@
+2001-12-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/fpu.c (do_fpu_error): Handle denormalized floating
+	point number.  Remove un-needed grab_fpu.
+
+	* arch/sh/kernel/head.S (_stext): Don't initialize FPU, as FPU is
+	not used by kernel.
+	(SR): Initial value with FD=1 (no FPU use).
+
+	* include/asm-sh/processor.h (unlazy_fpu): Don't need to grab_fpu.
+	(clear_fpu): Call release_fpu.
+
+	* arch/sh/kernel/entry.S (PF_USEDFPU, __PF_USEDFPU): Removed.
+	(restore_all, handle_exception): Simplified.
+	(__fpu_prepare_fd, __init_task_flags): Removed
+
+	* arch/sh/kernel/fpu.c (enable_fpu_in_danger): Removed.
+	(fpu_prepare_fd): Removed.
+
+2001-12-28  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* include/asm-sh/processor.h (FPSCR_ENABLE_MASK, FPSCR_FLAG_MASK):
+	New macros.
+
+	* arch/sh/kernel/fpu.c (denormal_to_double, ieee_fpe_handler): 
+	New functions.
+
+2001-12-26  Jeremy Siegel  <jsiegel@mvista.com>
+	
+	* arch/sh/kernel/traps.c: fix handle_unaligned_access() branch offsets
+	* arch/sh/mm/fault.c: check for null mmap when handling page fault
+
+2001-12-20  Takashi Yoshii  <yoshii-takashi@hitachi-ul.co.jp>
+
+	* include/asm-sh/pgtable.h (pgprot_noncached): Defined and
+	implemented.
+
+2001-12-16  Paul Mundt  <lethal@chaoticdreams.org>
+
+	* drivers/char/shwdt.c: Added a proper timer for pinging the device
+	periodically. Clock division ratio is now settable at load time ..
+	Numerous other small bug fixes.
+
+2001-12-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/hitachi_se.h (PA_BCR): Comment fix to sync mainline.
+
+	* drivers/block/rd.c (initrd_read): Don't need to flush the cache.
+	(This file can be removed.)
+	* include/linux/highmem.h (memclear_highpage_flush): Likewise.
+
+2001-12-12  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/kernel/rtc.c (sh_rtc_gettimeofday): Fix SH-4 RTC bug work
+	around.
+	(set_rtc_time, sh_rtc_settimeofday): Likewise. Remove schedule_timeout
+	call and merged to sh_rtc_settimeofday.
+
+2001-12-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/sys_sh.c-1.7: Removed.
+
+2001-12-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* mm/memory.c (do_wp_page): Re-introduce ifdef-out-ing
+	flush_cache_page.
+
+2001-12-06  M. R. Brown  <mrbrown@0xd6.org>
+
+        * drivers/char/maple_keyb.c (dc_scan_kbd): Replaced calls to
+	memscan() with calls to memchr().  Credit goes to Robert M. Love for
+	the patch.
+
+2001-12-04  Jeremy Siegel  <jsiegel@mvista.com>
+	* Include gdrom compile patch from Robert M. Love <rml@tech9.net>
+	* drivers/net/gdrom.c: as per patch
+	* include/asm-sh/segment.h: new file as per patch
+
+2001-12-03  Jeremy Siegel  <jsiegel@mvista.com>
+	* init/main.c: Robert Love's <rml@tech9.net> patch adding gdrom
+	  to bootable device list, as per M.R. Brown (mrbrown@0xd6.org)
+	* init/main.c: new file
+
+2001-11-30  Jeremy Siegel  <jsiegel@mvista.com>
+	* drivers/char/shwdt.c: missing file copied from full tree
+	* updated to 2.5.0 (same as 2.4.15)
+	
+2001-11-02  Jeremy Siegel  <jsiegel@mvista.com>
+
+	* arch/sh/config.in: allow setting of CONFIG_SH_PCIDMA_NONCOHERENT
+	* include/asm-sh/stat.h: consistency w/glibc using either endian
+	* include/asm-sh/uaccess.h: add Tomoyoshi ASANO's big-endian fix
+	* arch/sh/kernel/{io_,pci-}7751se.c: minor cleanup
+
+2001-10-30  Jeremy Siegel  <jsiegel@mvista.com> 
+
+	* arch/sh/kernel/io_7751se.c: get pci.h from linux, not asm
+	* include/asm-sh/pci.h: define pci_dac_dma_supported()
+
+2001-10-16  M. R. Brown  <mrbrown@0xd6.org>
+
+	* Branch merge of linux-2_4-branch.
+
+	* Added treelink.sh and treeunlink.sh to the scripts/ directory.
+
+	* Merged in NIIBE's updates from kernel/.
+
+2001-10-15  M. R. Brown  <mrbrown@0xd6.org>
+
+	* Brought HEAD to a state ready for 2.5 development.
+
+	* linux-2_4-branch branch created.  This allows for concurrent
+	development of the 2.4 and 2.5 trees.
+
+2001-10-14  NIIBE Yutaka  <gniibe@server1.m17n.org>
+
+	* drivers/net/8139too.c (rtl8139_start_xmit): Fix merge gerbage.
+
+	* arch/sh/kernel/setup_se.c (init_se_IRQ): Remove
+	CONFIG_SH_7751_SOLUTION_ENGINE section.
+	* include/asm-sh/hitachi_se.h (PA_BCR): Likewise.
+
+2001-10-13  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/Makefile (CFLAGS, AFLAGS): Use -m4 -mno-implicit-fp for
+	SH4 compile.  We used to use -m4-nofpu but it's not compatible
+	to -m4 (differs in calling convention).
+
+2001-10-13  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.13-pre2.
+
+2001-10-12  David Woodhouse  <dwmw2@redhat.com>
+
+	* arch/sh/config.in: Set default memory sizes for Solution Engines
+
+2001-10-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.12.
+	* Updated to 2.4.11.
+
+2001-10-04  Paul Mundt  <lethal@chaoticdreams.org>
+
+	* arch/sh/mm/fault.c (do_page_fault): Don't kill init when out
+	of memory.
+
+2001-10-01  M. R. Brown  <mrbrown@0xd6.org>
+
+	* drivers/video/pvr2fb.c (pvr2fb_init): Make fb_find_mode() default
+	to 16bpp instead of 32bpp.
+
+2001-09-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/uaccess.h (__put_user_u64): New macro.
+	* arch/sh/kernel/signal.c: Include <linux/personality.h>.
+	* drivers/char/sh-sci.c (banner): Fix __initdata.
+
+	* Updated to 2.4.10.
+
+2001-09-15  Paul Mundt  <lethal@chaoticdreams.org>
+
+	* arch/sh/Makefile: Remove usage of $(tool_prefix) and needless
+	redefinition of CROSS_COMPILE. Obey toplevel CROSS_COMPILE
+	instead.
+
+2001-09-13  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/sys_sh.c (arch_get_unmapped_area): Don't
+	COLOUR_ALIGN when it comes with MAP_PRIVATE.
+
+2001-09-13  Paul Mundt  <lethal@chaoticdreams.org>
+
+	* Documentation/Configure.help: Add CONFIG_SH_WDT description.
+	* arch/sh/config.in: Add watchdog card menu, and watchdog driver.
+	* drivers/char/Makefile: Add CONFIG_SH_WDT support.
+	* drivers/char/shwdt.c: New file.
+
+2001-09-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/softirq.h (__cpu_raise_softirq): Removed.
+	* Updated to 2.4.10-pre6.
+
+2001-09-10  David Woodhouse <dwmw2@infradead.org>
+
+	* arch/sh/mm/cache-sh3.c: Clearer definitions of CCR_CACHE_VAL and
+	CCR_CACHE_INIT.
+	* arch/sh/mm/cache-sh4.c: Likewise.
+
+2001-09-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/keyboard.h (kbd_rate): Removed.
+	* Updated to 2.4.10-pre4.
+
+2001-08-31  M. R. Brown <mrbrown@0xd6.org>
+
+        * arch/sh/kernel/Makefile: Add dependency for rtc-aica.o for
+        CONFIG_SH_DREAMCAST.
+        * arch/sh/kernel/mach_dc.c: Add prototypes and pointers for the AICA
+        RTC routines to the machvec.
+        * arch/sh/kernel/time.c (time_init): Remove checks for
+        MACH_DREAMCAST as we can just use the RTC routines defined in the
+        machvec.
+        * arch/sh/kernel/rtc-aica.c: New file.
+
+2001-08-31  Jeremy Siegel <jsiegel@mvista.com>
+
+	* include/asm-sh/system.h: make __cli_and_save() volatile again
+
+2001-08-24  David Woodhouse  <dwmw2@infradead.org>
+
+	* arch/sh/mm/cache-sh3.c: We were missing a loop over the ways in
+	__flush_wback_region(). Also disable interrupts between reading
+	an entry and writing it back modified.
+	* arch/sh/kernel/pcibios.c: Generic versions of five pcibios_xxx()
+	functions which can be shared between platforms.
+	* arch/sh/kernel/pci_st40.c: Use $1.
+	* arch/sh/kernel/pci-dc.c: Use $1.
+	* arch/sh/kernel/pci-sh7751.c: Use $1.
+	* arch/sh/kernel/Makefile: Use $1.
+
+2001-08-23  David Woodhouse  <dwmw2@infradead.org>
+
+	* arch/sh/config.in: Add CONFIG_MEMORY_SIZE, clean up 
+	platform-specific memory start/size definitions.
+	* include/asm-sh/page.h: Define __MEMORY_SIZE.
+	* arch/sh/kernel/setup.c: Use __MEMORY_SIZE instead of hardcoded 4MiB.
+
+2001-08-22  David Woodhouse  <dwmw2@infradead.org>
+
+	* drivers/net/via-rhine.c: Update to version LK1.1.11 from
+	2.4.9-ac9 (set dev->base_addr before first call to wait_for_reset()
+	and free the bounce buffers only if we allocated any in the first
+	place.
+
+2001-08-20  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/elf.h: Removed inclusion of <asm/byteorder.h>.
+
+2001-08-17  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/net/8139too.c: Include <linux/completion.h>.
+	* drivers/maple/maple.c: Likewise.
+	(kmapled_exited, maple_exit, kmapled_thread): Use new "completion"
+	interface.
+
+	* include/asm-sh/keyboard.h (kbd_rate): New function.
+	* include/asm-sh/io.h (page_to_bus): New macro.
+	* include/asm-sh/mmzone.h (page_to_phys): Defined.
+
+	* Updated to 2.4.9.
+
+2001-08-14  David Woodhouse  <dwmw2@infradead.org>
+
+	* arch/sh/kernel/pci-dma.c: Use dma_cache_wback_inv() in 
+	pci_alloc_consistent instead of flush_cache_all(), which is
+	a nop on SH3. If the size is so large that it's quicker just 
+	to flush the whole cache, that's a decision for the
+	arch-specific cache management code to make.
+
+2001-08-11  David Woodhouse  <dwmw2@infradead.org>
+
+	* arch/sh/config.in: New CONFIG_SH_PCIDMA_NONCOHERENT option
+	* include/asm-sh/pci.h: Include cache management calls for the
+	case where the above option is set.
+	* arch/sh/kernel/sh_ksyms.c: include linux/pci.h not asm/pci.h
+
+2001-08-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.8.
+
+2001-08-10  Jeremy Siegel <jsiegel@mvista.com>
+	Change SH7751 to separate machine type.
+	Added new files:
+	* arch/sh/kernel/{io,setup,mach,led}_7751se.c
+	* include/asm-sh/{io,hitachi}_7751se.h
+	Modified files:	
+	* arch/sh/kernel/Makefile, arh/sh/kernel/{io,led}_se.c
+	* arch/sh/kernel/pci-{7751se,sh7751}.c
+	* include/asm-sh/{io,pci,machvec}.h
+
+2001-08-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache-sh4.c (__flush_wback_region,
+	__flush_purge_region): Comment fix for the arguments.
+	* arch/sh/mm/cache-sh3.c (__flush_wback_region,
+	__flush_purge_region): Likewise.
+
+2001-08-10  David Woodhouse  <dwmw2@infradead.org>
+
+	* arch/sh/mm/cache-sh3.c: Implementation of cache management
+	routines __flush_{wback,invalidate,purge}_region. Required for
+	SH3 platforms which have DMA hardware.
+	* include/asm-sh/pgtable.h: Take the 'extern' definitions of the
+	above out of #ifdef __SH4__
+
+2001-08-10  David Woodhouse  <dwmw2@infradead.org>
+
+	* drivers/mtd/maps/solutionengine.c: Map driver for flash chips
+	and PROM on Solution Engine and similar boards.
+	* drivers/mtd/maps/Config.in: Appropriate magic.
+	* drivers/mtd/maps/Makefile: Ditto.
+
+2001-08-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.8-pre8.
+
+	Bug fix for dis-contiguous page handling.
+	* include/asm-sh/mmzone.h (is_valid_page): New inline function.
+	(VALID_PAGE): Use is_valid_page.
+
+2001-08-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.8-pre7.
+
+	* arch/sh/mm/fault.c (update_mmu_cache): Use __set_bit (was:
+	set_bit).
+	* arch/sh/mm/cache-sh4.c (copy_user_page): Set PG_mapped flag
+	in advance.  Because it will be mapped real soon now.
+	(clear_user_page): Ditto.
+
+	* include/asm-sh/pgtable.h (__flush_cache_page): Removed.
+	* arch/sh/mm/cache-sh4.c (__flush_dcache_page): Renamed from
+	__flush_cache_page and make it static.  Removed u0, as it's
+	always 0.  Removed the statements of case u0!=0.
+	(flush_dcache_page): Call __flush_dcache_page.
+
+	* arch/sh/mm/fault.c (update_mmu_cache): We only need to flush
+	cache of kernel mapped address.
+
+2001-08-08  YAEGASHI Takeshi  <t@keshi.org>
+
+	* drivers/video/pvr2fb.c:
+	(pvr2_modedb): fix "vga_640x480" entry.
+	(pvr2fb_set_var): set SCROLL_YREDRAW to speed up scroll.
+	(pvr2_setcolreg): fix bit field manipulation for RGB565.
+	(pvr2fb_init, pvr2fb_setup): correct number of entries of
+	cable_type and video_output.
+	* drivers/char/dc_keyb.c: New file: implement kbd_translate().
+	* drivers/char/Makefile: Ditto.
+	* include/asm-sh/keyboard.h: Ditto.
+	* arch/sh/kernel/pci-dc.c (pci_free_consistent): reset
+	gapspci_dma_used in order to allocate PCI buffer again.
+
+2001-08-08  Greg Banks  <gnb@alphalink.com.au>
+
+	* include/asm-sh/linux_logo.h: New logo.
+
+2001-08-08  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.8-pre6.
+	* Updated to 2.4.8-pre5.
+
+	* arch/sh/mm/cache-sh4.c (ptep_get_and_clear): Moved to ...
+	(check_cache_page): Removed.
+	(__flush_icache_page): Removed.
+	* include/asm-sh/pgtable.h (__flush_icache_page): Removed.
+
+	* include/asm-sh/pgalloc.h (ptep_get_and_clear): ... here. 
+	(ptep_test_and_clear_young, ptep_test_and_clear_dirty,
+	ptep_set_wrprotect, ptep_mkdirty): Moved from pgtable.h.
+	(ptep_get_and_clear needs definition of mm.h).
+
+	* include/asm-sh/pgtable.h (PG_mapped): Renamed from
+	PG_mapped_with_alias.
+	(__flush_cache_page): Removed last argument, and add first arg.
+	* arch/sh/mm/cache-sh4.c (__flush_cache_page): Take u0 address
+	as first argument.  Don't care about I-cache.
+	(flush_dcache_page): Follow the change.
+
+	* include/asm-sh/ide.h (ide_insw): Removed.
+	* drivers/cdrom/gdrom.c (gdrom_intr): Remove __flush_wback_region.
+
+	* arch/sh/mm/fault.c (update_mmu_cache): Flush the cache when first
+	mapped, even if it has no alias.  (We needed this to for NFS).
+
+2001-08-07  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/net/8139too.c (rtl8139_hw_start): Added tp->rx_config = 0.
+
+2001-08-07  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (PG_mapped_with_alias): New macro.
+	(PG_dcache_dirty: Deleted.
+	(ptep_get_and_clear, ptep_test_and_clear_young,
+	ptep_test_and_clear_dirty, ptep_set_wrprotect, ptep_mkdirty,
+	pte_same): Define here (was: included by <asm-generic/pgtable.h>).
+
+	* arch/sh/mm/cache-sh4.c (flush_dcache_page): New implementation.
+	Check if it's mapped or not.
+	(ptep_get_and_clear): New function (was: generic implementation).
+
+	* arch/sh/mm/fault.c (update_mmu_cache): Flush the cache when
+	it's mapped at first, and mark the page as it's mapped.
+	Bug fix: check the page is VALID or not.
+
+	* arch/sh/mm/cache-sh4.c (CACHE_ALIAS): Moved to ...
+	* include/asm-sh/pgtable.h (CACHE_ALIAS): ... here.
+
+	* arch/sh/kernel/setup.c (boot_cpu_data): Have initial value for
+	loops_per_jiffy.
+
+2001-08-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/clear_page.S: Use aligned address for write back.
+	* arch/sh/mm/__copy_user_page-sh4.S: Likewise.
+	* arch/sh/mm/copy_page.S: Likewise.
+
+	* arch/sh/mm/cache-sh4.c (CACHE_IC_NUM_WAYS, CACHE_OC_NUM_WAYS): 
+	Removed.
+	(cache_wback_all): Removed and integrate to cache_init.
+
+	* arch/sh/mm/copy_page.S: Write back TO,
+	* arch/sh/mm/clear_page.S: Write back TO.
+
+	* arch/sh/mm/cache-sh3.c (cache_init): Read CCR at P2.
+	* arch/sh/mm/cache-sh4.c (cache_init): Likewise.
+	(__flush_cache_page): Fix bug.  Call restore_flags.
+	(flush_cache_page): New implementation.
+	(clear_user_page, copy_user_page): Do it in assembler routines.
+
+2001-08-05  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (PTE_PHYS_MASK): Defined.
+	(pte_page): Bug fix.  Use PTE_PHYS_MASK.
+
+	* mm/vmscan.c (try_to_swap_out): Bug fix.  Flush the page before we
+	clear the PTE.
+
+	* Updated to 2.4.8-pre4.
+
+2001-08-04  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache-sh4.c (__flush_wback_region): Fix bug of
+	expression of END.
+	(__flush_purge_region): Likewise.
+	(__flush_invalidate_region): Likewise.
+
+2001-08-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/cdrom/gdrom.c (gdrom_init): Restrict merging request.
+	(dont_merge_requests_fn, dont_bh_merge_fn): New functions.
+
+	* arch/sh/kernel/sys_sh.c (arch_get_unmapped_area): Always align
+	to 16KB.
+
+	* arch/sh/mm/cache-sh4.c (flush_cache_sigtramp): Protect from
+	interrupt.
+	(__flush_cache_page, __flush_icache_page): Likewise.
+	(check_cache_page): Likewise.
+
+2001-08-02  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/maple/maple.c (maple_send): Bug fix.  Call
+	dma_cache_wback_inv. (was: __flush_wback_region).
+
+	* include/asm-sh/io.h (dma_cache_wback_inv, dma_cache_inv,
+	dma_cache_wback): Defined with new __flush_XXX_region functions.
+	(was: bogus cache_XXX_area functions, not implemented).
+
+	* drivers/cdrom/gdrom.c (gdrom_intr): Follow the change of
+	the last argument of __flush_wback_region.
+	* include/asm-sh/ide.h (ide_insw): Likewise.
+
+	* arch/sh/mm/cache-sh4.c (__flush_purge_region): New function.
+	(__flush_icache_page): New function. 
+	(__flush_wback_region, __flush_invalidate_region): Last argument
+	is SIZE (was: END).
+
+	* include/asm-sh/pgtable.h (__flush_purge_region,
+	__flush_icache_page): Added.
+
+2001-07-31  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/system.h (switch_to): Revert changes of 07-30.
+	In schedule(), switch_to() is always called with interrupt enabled.
+
+	* drivers/cdrom/gdrom.c (DEVICE_NAME): Shorter name (when error).
+	(gdrom_do_command): Protect from interrupts.
+	(do_gdrom_request): Handle the case where a request is made up
+	from multple chunks.
+
+	* Updated to 2.4.8-pre3.
+
+	* drivers/cdrom/gdrom.c: New file.
+	* drivers/cdrom/Makefile, drivers/cdrom/Config.in, arch/sh/config.in:
+	Support SEGA Dreamcast GD-ROM Driver (CD-R).
+
+2001-07-30  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/pci-dc.c (pci_alloc_consistent): Format arg change
+	to stop warning.
+	* drivers/maple/maple.c: Likewise.
+
+	* arch/sh/kernel/pci-sh7751.c (pci_conf1_read_config_byte,
+	pci_conf1_read_config_word, pci_conf1_read_config_dword,
+	pci_conf1_write_config_byte, pci_conf1_write_config_word,
+	pci_conf1_write_config_dword): Use no underscore version
+	of save_and_cli and restore_flags.
+
+	* arch/sh/overdrive/led.c (mach_led): Likewise.
+
+	* include/asm-sh/system.h (switch_to): Alternative implementation
+	which maintain interrupt-disabled state.
+	(__save_flags, __save_and_cli): New implementations.
+	(__restore_flags): Debuuging implementation.
+	(really_restore_flags): New define.
+
+	* include/asm-sh/softirq.h (local_bh_enable): Add barrier and
+	remove __sti.
+
+	* arch/sh/kernel/setup_dc.c (disable_systemasic_irq,
+	enable_systemasic_irq): Protect critical region.  Driver
+	can call disable_irq.
+
+	* arch/sh/kernel/setup_cqreek.c (setup_cqreek): Remove declaration
+	of disable_hlt.
+
+	* arch/sh/kernel/process.c (cpu_idle): Match __cli/__sti.  Avoid
+	sleeping with interrupt disabled.
+
+2001-07-30  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* include/asm-sh/pgtable.h (__flush_wback_region): Defined for SH3.
+
+2001-07-29  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/sh-sci.c (put_char, put_string): Only for
+	CONFIG_SERIAL_CONSOLE.
+
+	* Updated to 2.4.8-pre2.
+
+2001-07-28  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/mm/__copy_user_page-sh4.S (__copy_user_page): Bug fix.
+	Do not clobber r10,r11.
+	* arch/sh/mm/copy_page.S (copy_page): Bug fix. Do not clobber r10,r11.
+	* arch/sh/mm/cache-sh4.c (clear_user_page, copy_user_page): Bug fix.
+	Call __flush_tlb_page with interrupt disabled.
+
+2001-07-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/Makefile (arch/sh/vmlinux.lds): Revert the change of
+	2001-07-27.  GCC complains (misunderstand) it.
+
+2001-07-27  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/vmlinux.lds.in (.data.cacheline_aligned): Align 16 for SH3.
+	Reported by Masahiro ABE <m-abe@aandd.co.jp>.
+	* arch/sh/vmlinux.lds.in: Rename from vmlinux.lds.S, since
+	it's not written in assembler.
+	* arch/sh/Makefile (arch/sh/vmlinux.lds): Follow the change.
+
+	* drivers/ide/ide.c (ide_wait_cmd): Revert the change to sync
+	mainline.  IIRC, it was needed for SolutionEngine, but such
+	timing issue shoule be solved target specific way.
+
+	* scripts/Configure: Revert the change to sync mainline.
+
+	Follow the changes of 2.4.8-pre1.
+	* include/asm-sh/irq.h (irq_demux): Make them static inline.
+	* include/asm-sh/mmu_context.h (get_new_mmu_context, get_mmu_context,
+	init_new_context, destroy_context, set_asid, get_asid,
+	activate_context, switch_mm, enter_lazy_tlb): Likewise.
+	* include/asm-sh/io.h (isa_port2addr, ctrl_inb, ctrl_inl, ctrl_outb,
+	ctrl_outw, virt_to_phys, phys_to_virt): Likewise.
+	* include/asm-sh/processor.h (thread_saved_pc, grab_fpu,(release_fpu): 
+	Likewise.
+	* include/asm-sh/uaccess.h (__strncpy_from_user, __clear_user, 
+	__copy_user): Likewise.
+	* include/asm-sh/semaphore.h (sema_init): Likewise.
+	* include/asm-sh/pci.h (pci_dma_supported): Likewise.
+	* include/asm-sh/page.h (get_order): Likewise.
+	* include/asm-sh/checksum.h (csum_partial_copy_nocheck,
+	csum_partial_copy_from_user): Likewise.
+
+	* include/asm-sh/smplock.h: Remove bogus SMP lock implementation.
+
+	* Updated to 2.4.8-pre1.
+
+	* arch/sh/kernel/entry.S (ret_from_fork): Call schedule_tail.
+	by Stuart Menefy <stuart.menefy@st.com>.
+
+2001-07-26  Takashi YOSHII  <yoshii-takashi@hitachi-ul.co.jp>
+
+	* include/asm-sh/irq.h, include/asm-sh/dma.h, arch/sh/kernel/dma.c,
+	arch/sh/kernel/Makefile, arch/sh/config.in,
+	Documentation/Configure.help: DMA support update.
+
+2001-07-25  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/setup_cqreek.c (mask_and_ack_cqreek): Move the
+	inw after the masking.
+	(setup_cqreek): Remove call of disable_hlt.
+
+	* arch/sh/mm/cache-sh4.c (flush_cache_sigtramp): Access from P2
+	area.
+
+2001-07-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache-sh4.c (__flush_wback_region): Rename from
+	__flush_dcache_region, as it's confusing.
+	(__flush_invalidate_region): Make it externally visible.
+	* include/asm-sh/pgtable.h: Follow the change.
+	* drivers/maple/maple.c (maple_send): Follow the change.
+
+2001-07-24  Masahiro ABE <m-abe@aandd.co.jp>
+
+	* arch/sh/kernel/setup.c (setup_arch): #ifdef mv_unknown to eliminate
+	warning.
+
+2001-07-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/segment.h: Removed.
+	* arch/sh/kernel/pci-sh7751.c: Remove inclusion of <asm/segment.h>.
+
+2001-07-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/time.c (do_timer_interrupt): Remove #if 0 for
+	sh_do_profile.
+
+2001-07-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/copy_page.S, arch/sh/mm/clear_page.S: Bug fix.
+	SH-3 doesn't have movca op-code.
+
+	* include/asm-sh/page.h (clear_page, copy_page): Declared.
+	* arch/sh/mm/clear_page.S, arch/sh/mm/copy_page.S: New files.
+	* arch/sh/mm/Makefile (obj-y): Added.
+
+	* include/asm-sh/page.h (__clear_user_page, __copy_user_page):
+	Declared.
+	* arch/sh/mm/cache-sh4.c: Use them.
+	* arch/sh/mm/__clear_user_page-sh4.S,
+	arch/sh/mm/__copy_user_page-sh4.S: New files.
+	* arch/sh/mm/Makefile: Added.
+
+2001-07-23  David Woodhouse <dwmw2@infradead.org>
+
+	* arch/sh/mm/Makefile (CONFIG_CPU_SH3, CONFIG_CPU_SH4): Conditionally
+	defined.
+	* arch/sh/mm/cache-sh3.c, arch/sh/mm/cache-sh4.c: New files.
+	* arch/sh/mm/cache.c: Removed.
+
+2001-07-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/io_adx.h: Copyright notice fix.
+
+	* Documentation/Configure.help (CONFIG_CPU_LITTLE_ENDIAN): Revert the
+	change to sync mainline.
+	* README (ON WHAT HARDWARE DOES IT RUN?): Likewise.
+
+	* Documentation/Configure.help (CONFIG_8139TOO_DREAMCAST): Added.
+	* drivers/net/Config.in (CONFIG_8139TOO_DREAMCAST): New config.
+	* drivers/net/8139too.c (CONFIG_8139TOO_DREAMCAST): New config.
+	(RX_BUF_LEN_IDX): Depends CONFIG_8139TOO_DREAMCAST.
+	(rtl8139_rx_config): Likewise.
+	(rtl8139_start_xmit): Use USE_NO_DMAMAP.
+
+	* arch/sh/config.in: Fix the indentation.
+
+2001-07-22  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.7.
+
+2001-07-20  Masahiro ABE <m-abe@aandd.co.jp>
+
+	* Documentation/Configure.help (CONFIG_CF_AREA5): Edit text.
+
+2001-07-19  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.7-pre8.
+
+	* arch/sh/kernel/process.c (cpu_idle): Remove not-needed __sti.
+	As it was asymmetric, may cause trouble.
+
+2001-07-18  Masahiro ABE <m-abe@aandd.co.jp>
+
+	* Documentation/Configure.help (CONFIG_CF_ENABLER): Support area 5 too.
+	(CONFIG_CF_AREA5): Added.
+	* arch/sh/config.in: Added selection of CompactFlash area.
+	* arch/sh/kernel/cf-enabler.c (allocate_cf_area): Added to support
+	directly connected CompactFlash for SH4.
+	(cf_init_default): call allocate_cf_area if SH4.
+
+	* Documentation/Configure.help (CONFIG_SH_GENERIC): Added ADX.
+	* arch/sh/config.in (CONFIG_SH_ADX): Added for ADX support.
+	(CONFIG_MEMORY_START): Added definition for ADX.
+	(CONFIG_CF_ENABLER): Added ADX.
+	* arch/sh/kernel/Makefile: Added ADX support.
+	* include/asm-sh/io.h: Added ADX support.
+	* include/asm-sh/machvec.h: Added ADX support.
+
+	* arch/sh/kernel/{io_adx.c,mach_adx.c,setup_adx.c}: New files.
+	* include/asm-sh/io_adx.h: New file.
+
+	* arch/sh/kernel/irq_maskreg.c: New file.
+	Add support for simple word-size IRQ mask register.
+	* include/asm-sh/irq.h : Likewise.
+
+2001-07-18  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/fault.c (__do_page_fault): Use pte_not_present.
+	* include/asm-sh/pgtable.h (pte_not_present): New inline function.
+
+2001-07-18  NIIBE Yutaka  <gniibe@m17n.org>
+
+	Don't use pgd/pte memory pool.
+	* include/asm-sh/pgalloc.h (do_check_pgt_cache): Defined.
+	(pgd_quicklist, pte_quicklist, pgtable_cache_size): Null definition.
+	(pgd_alloc): Renamed from pgd_alloc_slow.
+	(pgd_free): Renamed from free_pgd_slow.
+	(get_pgd_fast, free_pgd_fast): Removed.
+	(pte_alloc_one_fast): Just return 0.
+	(pte_free_fast): Removed.
+	(pte_free): Defined as pte_free_slow.
+
+	* arch/sh/mm/init.c (do_check_pgt_cache): Removed.
+	(show_mem): Removed showing pgtable_cache_size.
+
+	* include/asm-sh/processor.h (pte_quick, pgtable_cache_sz): Removed.
+	(hard_math): Change the order.
+	* arch/sh/kernel/setup.c: Follow the change.
+
+	* include/asm-sh/pgtable-2level.h (pgd_clear): Do nothing.
+
+	* mm/memory.c (free_one_pgd): Revert change of 2001-07-16.
+	(As it's not accepted by Linus.)
+
+
+	* Updated to 2.4.7-pre7.
+
+	* arch/sh/mm/cache.c (__flush_cache_page): Don't disable interrupt.
+
+2001-07-17  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (p3map_sem): New variable.
+	(p3_cache_init): Initialize p3map_sem.
+	(clear_user_page, copy_user_page): Use semaphore(s) to protect
+	critical section.
+	(flush_cache_all): New implementation.
+
+	* arch/sh/mm/fault.c (update_mmu_cache): Make the critical section
+	shorter.
+
+2001-07-17  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/mm/cache.c (clear_user_page, copy_user_page): Bug fix.
+	Disable interrupt until __flush_dcache_region() is done.
+
+2001-07-17  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/fault.c (__do_page_fault): Bug fix.  Don't allow
+	PGD overrun.
+
+	* arch/sh/kernel/dma.c: Remove inclusion of <asm/smp.h>.
+	* arch/sh/kernel/setup.c, arch/sh/kernel/irq.c: Ditto.
+	* arch/sh/kernel/process.c: Include file clean up.
+
+	* arch/sh/kernel/process.c (machine_restart, machine_halt): New
+	implementations.
+
+2001-07-16  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* mm/memory.c (free_one_pgd): Bug fix.  Do pgd_clear _after_
+	free_one_pmd.
+
+	* arch/sh/kernel/setup.c (boot_cpu_data): Bug fix.  0 for
+	pgtable_cache_sz.
+
+	* arch/sh/mm/cache.c (clear_user_page, copy_user_page): Clear PTE 
+	after use.
+
+2001-07-16  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* include/asm-sh/pgalloc.h (__flush_tlb_page): Declared.  
+	* arch/sh/mm/cache.c : Add inclusion <asm/pgalloc.h>,
+	<asm/mmu_context.h>
+	(clear_user_page, copy_user_page): Do __flush_tlb_page() before
+	update_mmu_cache().
+	* arch/sh/mm/fault.c (__flush_tlb_page): Make it global.
+
+2001-07-16  Takashi YOSHII  <yoshii-takashi@hitachi-ul.co.jp>
+
+	* arch/sh/kernel/ptrace.c (ubc_set_tracing): Bug fix for SH7709A.
+
+	* include/asm-sh/ptrace.h (UBC_TYPE_SH7729, BBR_CPU, BBR_DMA,
+	BRCR_PCTE): Defined.
+	(BBR_WRITE): Change the value. 
+
+2001-07-16  Masahiro Abe <m-abe@aandd.co.jp>
+
+	IRQ handling update.
+	* arch/sh/kernel/setup_bigsur.c (end_bigsur_irq): Don't enable IRQ
+	when it is disabled.
+	* arch/sh/kernel/setup_ec3104.c (end_ec3104_irq): Likewise.
+	* arch/sh/kernel/setup_hd64465.c (end_hd64465_irq): Likewise.
+	* arch/sh/kernel/setup_hd64461.c (end_hd64461_irq): Likewise.
+	* arch/sh/kernel/setup_dc.c (end_systemasic_irq): Likewise.
+	* arch/sh/kernel/irq_ipr.c (end_pint_irq): Likewise.
+
+2001-07-16  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/mmzone.h: Remove inclusion of bootmem.h.
+
+2001-07-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	IRQ handling bug fix.  Reported by Masahiro Abe <m-abe@aandd.co.jp>
+	* arch/sh/kernel/irq_intc2.c (end_intc2_irq): Don't enable IRQ
+	when it is disabled.
+	* arch/sh/kernel/irq_ipr.c (end_ipr_irq): Likewise.
+	* arch/sh/kernel/irq_imask.c (end_imask_irq): Likewise.
+
+	* arch/sh/kernel/irq.c (setup_irq): Clear desc->status.
+	(probe_irq_on): Removed unmatched spin_unlock_irq().
+
+2001-07-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (copy_user_page, clear_user_page): Bug fix.
+	Call __flush_dcache_region so that the data goes to memory, to
+	maintain cache coherency between I and D.
+
+2001-07-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/config.in (CONFIG_DEBUG_KERNEL_WITH_GDB_STUB): Removed.
+
+	* arch/sh/kernel/entry.S (call_dae, debug_trap): Only for
+	CONFIG_SH_STANDARD_BIOS (was: also CONFIG_DEBUG_KERNEL_WITH_GDB_STUB).
+	* arch/sh/kernel/traps.c (gdb_vbr_vector, trap_init): Likewise.
+	* drivers/char/sh-sci.c: Likewise.
+
+	* Documentation/Configure.help (CONFIG_GDB_STUB_VBR): Removed.
+	(CONFIG_DEBUG_KERNEL_WITH_GDB_STUB): Removed.
+	(CONFIG_STNIC): Added.
+	(CONFIG_SH_RTC): Added.
+	(CONFIG_SH_GENERIC): Added.
+
+2001-07-11  Masahiro Abe <m-abe@aandd.co.jp>
+
+	* include/asm-sh/machvec.h: Bug fix.  Move #endif.
+
+2001-07-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/hardirq.h (irq_cpustat_t): Added __ksoftirqd_task.
+	* include/asm-sh/atomic.h (smp_mb__before_atomic_dec): Defined.
+
+	* Updated to 2.4.7-pre6.
+	* Documentation/fb/pvr2fb.txt (Advantages): Typo fix.
+
+2001-07-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.7-pre5.
+
+	Follow the change of 2.4.7-pre5.
+	* include/asm-sh/softirq.h (raise_softirq): Removed.
+
+2001-07-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	Updated to 2.4.6.
+
+	Follow the change of 2.4.6.
+	* arch/sh/vmlinux.lds.S (.rodata): Added .rodata.*.
+	* include/asm-sh/hitachi_se.h (PA_MRSHPC): Spell fix for comment.
+
+2001-07-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/init.c (paging_init): Use __MEMORY_SIZE_2ND.
+
+2001-07-08  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/config.in (CONFIG_DISCONTIGMEM): Bug fix.  Added "then".
+	By ISHIKAWA Mutsumi <ishikawa@linux.or.jp>.
+
+	* include/asm-sh/page.h (phys_to_page): Bug fixed for paren.
+	By YAEGASHI Takeshi  <t@keshi.org>.
+
+	Discontiguous memory support.  
+	* arch/sh/config.in (CONFIG_DISCONTIGMEM): New config.
+	* arch/sh/kernel/setup.c (setup_arch): Setup NODE_DATA, and NODE(1).
+	* arch/sh/mm/init.c (discontig_page_data, discontig_node_bdata):
+	New variables.
+	(paging_init): Initialize NODE(1).
+	(mem_init): Initialize NODE(1).
+	* include/asm-sh/mmzone.h: New file.
+	* include/asm-sh/pgtable.h (pte_page): Use phys_to_page.
+	* include/asm-sh/page.h (__MEMORY_START_2ND, __MEMORY_SIZE_2ND):
+	Defined.
+	(VALID_PAGE, phys_to_page): #ifdef/#endif-out.
+
+2001-07-07  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/page.h (phys_to_page): New macro.
+	(virt_to_page): Use phys_to_page.
+	* include/asm-sh/pgtable.h (pte_page): Use phys_to_page.
+
+2001-07-07  YAEGASHI Takeshi  <t@keshi.org>
+
+	HD64461 IRQ number fix for HP600.
+	 93:      10076     HD64461-IRQ  ide0	# CF slot
+	 94:      15095     HD64461-IRQ  NE2000	# PC-card slot
+
+	* include/asm-sh/hd64461.h (HD64461_IRQ_NUM): Added.
+	* include/asm-sh/ide.h (ide_default_irq_hp600): Fix irq number.
+	* arch/sh/kernel/mach_hp600.c (mv_hp620, mv_hp680, mv_hp690): Fix
+	mv_nr_irqs.
+
+2001-07-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (flush_icache_page, flush_dcache_page,
+	flush_page_to_ram, check_cache_page): Use page_address.
+	* arch/sh/mm/fault.c (update_mmu_cache): Use page_address.
+	(and Bug fix.)
+	* include/asm-sh/pgtable.h (mk_pte): Use page_address.
+
+2001-07-04  Jeremy Siegel <jsiegel@mvista.com>
+
+	* arch/sh/lib/checksum.S: Bug fix.  Update R1's value.
+
+2001-07-04  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* include/asm-sh/pgtable.h (__flush_dcache_region): Defined for SH-3.
+	* drivers/net/Config.in (CONFIG_CS89x0): Can be enabled even when PCI
+	is disabled.
+
+2001-07-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/setup.c: Bug fix.  0 for pte_quick.
+
+2001-07-02  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (__flush_invalidate_region): New function.
+	(copy_user_page, clear_user_page): Bug fix.  Use
+	__flush_invalidate_region.
+
+	* include/asm-sh/pgtable.h (PG_dcache_dirty): Defined.
+	* arch/sh/mm/cache.c (flush_dcache_page): Defer flushing the cache
+	if possible.
+	* arch/sh/mm/fault.c (update_mmu_cache): Handle the deferred
+	flushing.
+
+2001-07-01  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/net/stnic.c (stnic_probe): Set endian.
+	Reported by <yshimizu@ic-software.co.jp>.
+
+2001-06-30  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (__flush_cache_page): Protect against
+	interrupt.
+	(flush_cache_all): Just clear the address array.
+	(detect_cpu_and_cache_system): Likewise.
+	(flush_cache_page): Bug fix.  Tag is physical address.
+
+	* Updated to 2.4.6-pre8.
+
+	SH-4 cache handling improvement.
+	* arch/sh/mm/cache.c (flush_icache_page, flush_page_to_ram): 
+	#if 0/#endfi out.
+	* include/asm-sh/pgtable.h (flush_page_to_ram, flush_icache_page):
+	Define as NULL.
+	* kernel/ptrace.c (access_one_page): Add flush_dcache_page.
+
+	* arch/sh/mm/cache.c (flush_cache_page): Remove bogus comment.
+	Change comment as we also need to let I-cache to flush.
+	(flush_dcache_page): Mention I-cache in comment.
+	(__flush_cache_page): New function. (Use 0 to invalidate.)
+	(flush_dcache_page): Use __flush_cache_page.
+
+	* arch/sh/mm/Makefile (obj-y): Added ioremap.o.
+	* arch/sh/mm/ioremap.c (remap_area_pages): Use pgd_offset_k.
+	(p3_ioremap): Renamed from __ioremap.
+	(p3_iounmap): Renamed from iounmap.
+	(remap_area_pages): Make it global.
+
+	* arch/sh/mm/fault.c (__do_page_fault): Use P3SEG and P4SEG
+	instead of VMALLOC_START and VMALLOC_END.
+	* include/asm-sh/pgtable.h (p3_cache_init): New function.
+	(VMALLOC_START): Change the value.
+	* arch/sh/mm/cache.c (p3_cache_init): New function.
+	(icache_purge_region): Removed.
+	(flush_icache_range): Just call flush_cache_all.  It's efficient
+	because the range would be so large (Usually it's larger than
+	cache size itself).  And it's OK, because it's rarely used.
+	(clear_user_page, copy_user_page): New implementations.
+
+	* arch/sh/mm/init.c (mem_init): Use __flush_dcache_region
+	(was: flush_page_to_ram.  The obsolete interface).
+	(mem_init): Call p3_cache_init.
+
+	* arch/sh/mm/cache.c (icache_purge_region): Renamed from
+	icache_purge_range.
+	(__flush_dcache_region): Renamed (was: __flush_dcache_range).
+	(flush_icache_range): Follow the changes.
+	* include/asm/ide.h (ide_insw): Use __flush_dcache_region.
+	* include/asm-sh/pgtable.h: Ditto.
+
+	* drivers/maple/maple.c (maple_send): Use __flush_dcache_region
+	(was: flush_page_to_ram.  The obsolete interface). 
+	(maple_sendbuf_page): Removed.
+
+	* include/asm-sh/pgtable.h (HAVE_ARCH_UNMAPPED_AREA): Defined for
+	SH-4.
+	* arch/sh/kernel/sys_sh.c (arch_get_unmapped_area): New function.
+	* include/asm-sh/shmparam.h (SHMLBA): 16kB for SH-4.
+	* arch/sh/mm/fault.c (update_mmu_cache): Removed pte_shared
+	handling.
+	(__flush_tlb_phys): Removed.
+	* include/asm-sh/pgtable.h (pte_shared): Removed.
+
+2001-06-29  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/io_se.c (se_outb_p): Bug fix.  Remove duplicated
+	`if' clause.
+
+2001-06-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/string.h (strlen): Declared.
+	(__HAVE_ARCH_STRLEN): Defined.
+	* arch/sh/lib/strlen.S: New file.
+	* arch/sh/lib/Makefile (obj-y): Added strlen.o. 
+
+	* Updated to 2.4.6-pre6.
+
+	Implement cache flush on I/O completion.
+	* include/asm-sh/pgtable.h (__flush_dcache_range): Declared.
+	* arch/sh/mm/cache.c (__flush_dcache_range): Rename from
+	dcache_wback_range.  And make it visible (not-static).
+	* include/asm-sh/ide.h (ide_insw): New macro to handle cache flush
+	for I/O.
+
+	* Revert the patch of 2001-06-26.  It should be done by driver
+	layer not VM layer.
+
+2001-06-27  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/lib/checksum.S (csum_partial_copy_generic): Performance
+	tweak.  Use @(<DISP>,RN) addressing mode.  Consider pipeline
+	of SH-3.  Perhaps we need different implementation for SH-4.
+
+2001-06-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	New implementation of flush-ing the page on swap.
+
+	* include/linux/mm.h (PG_flush_after, PageFlushAfter,
+	SetPageFlushAfter, PageTestandClearFlushAfter): New bit.
+	* mm/page_io.c (rw_swap_page_base): Set flush-after bit.
+	* fs/buffer.c (end_buffer_io_async): Implement flush-ing
+	with PG_flush_after.
+
+	* mm/memory.c (do_swap_page): Remove flush-ing the page.
+
+2001-06-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/ide/ide-geometry.c: Revert change of 2001-03-08.
+	It's not needed as we have the header file now .
+
+	* include/linux/netdevice.h include/net/checksum.h,
+	net/core/datagram.c, net/core/iovec.c, net/core/scm.c,
+	net/core/skbuff.c, net/core/sock.c, net/socket.c: Revert changes to
+	sync standard kernel (was: Changes to support no CONFIG_NET).
+
+2001-06-25  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.6-pre5.
+
+2001-06-25  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (_PAGE_FLAGS_HARDWARE_MASK): Drop SH-bit
+	on SH-3.
+
+2001-06-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (__pmd_offset): Removed.  It's only
+	valid for x86.
+
+	* include/asm-sh/string.h (strcpy, strncpy, strcmp, strncmp): Make
+	them static inline.
+
+	* include/asm-sh/processor.h (INIT_MMAP): Bug fix.  Set vm_start
+	and vm_end to 0.  (was: 0x80000000--0xa0000000).
+
+	* include/asm-sh/pgtable.h: Revert changes of 2001-06-20.
+	Atomic update is for SMP machine.  We don't need it for SuperH.
+
+2001-06-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	Enable use of pgd_quicklist and pte_quicklist (was: not used).
+	* include/asm-sh/pgalloc.h (pgd_free): Use free_pgd_fast (was: slow).
+	(pte_free): Use pte_free_fast (was: slow).
+	(pte_alloc_one_fast): Clear the first entry (was: assign ret[1]).
+	* include/asm-sh/pgtable-2level.h (pgd_clear): Zero clear for reuse.
+
+2001-06-21  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/irq.c (do_IRQ): Bug fix. Clear IRQ_INPROGRESS bit.
+
+	* include/asm-sh/pgtable.h: Include <asm/pgtable-2level.h> earlier.
+	* include/asm-sh/pgtable-2level.h: Add #ifndef/#endif for
+	__ASSEMBLY__.
+
+	* arch/sh/mm/init.c (paging_init): Fixed to PTRS_PER_PGD.
+	(was: USER_PTRS_PER_PGD*2)
+	(swapper_pg_dir): Use PTRS_PER_PGD (was: 1024 directly).
+
+	* include/asm-sh/pgtable.h (TWOLEVEL_PGDIR_SHIFT,
+	BOOT_USER_PGD_PTRS, BOOT_KERNEL_PGD_PTRS, USER_PGD_PTRS,
+	KERNEL_PGD_PTRS): Removed. (only valid for x86)
+
+	* Updated to 2.4.6-pre4.
+
+2001-06-20  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (_PAGE_BIT_DIRTY, _PAGE_BIT_RW,
+	_PAGE_BIT_ACCESSED): Defined.
+	(ptep_test_and_clear_dirty, ptep_test_and_clear_young,
+	ptep_set_wrprotect, ptep_mkdirty, ptep_get_and_clear): Implement
+	atomic update of PTE.
+
+2001-06-19  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/irq_ipr.c (init_IRQ): Removed initialization
+	of INTC_IRRX, INTC_ICRX.
+
+	* include/asm-sh/softirq.h (local_bh_enable): Follow the change of
+	semantics of softirq (of IA-32).
+
+	* arch/sh/kernel/entry.S (ret_from_syscall): Don't call softirq.
+	(handle_softirq): Removed.
+	(ret_with_reschedule): Label removed.
+
+	* arch/sh/kernel/irq.c (do_IRQ): Follow the change of IA-32 version.
+	(irq_controller_lock): Removed.
+
+	* include/asm-sh/hardirq.h: Remove __softirq_active, __softirq_mask.
+	Add softirq_pending.
+
+
+	* Updated 2.4.6-pre3.
+
+2001-05-28  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* include/asm-sh/bitops.h (__change_bit,__test_and_set_bit,
+	__test_and_clear_bit,__test_and_change_bit): Added.
+
+2001-05-28  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/config.in (CONFIG_SH_SH2000): Added.
+	* arch/sh/kernel/Makefile: Likewise.
+	* include/asm-sh/io.h: Likewise.
+	* include/asm-sh/machvec.h: Likewise.
+	* arch/sh/kernel/{setup_sh2000.c,io_sh2000.c}: New file.
+	* include/asm-sh/io_sh2000.h: New file.
+
+	* arch/sh/kernel/sh_ksyms.c (strnlen): Exported.
+
+2001-05-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.5.
+	* arch/sh/kernel/rtc.c (set_rtc_time): Removed declaration
+	of the function abs.
+
+2001-05-24  Stuart Menefy <stuart.menefy@st.com>
+
+	* arch/sh/config.in: Change to ST40STB1 config, moved char/pcmcia to
+	char menu, and added joystick and media options
+
+2001-05-24  Stuart Menefy <stuart.menefy@st.com>
+
+	* arch/sh/kernel/{time,setup}.c include/asm-sh/processor.h: Added
+	support for for ST40STB1 memory clock
+	* arch/sh/overdrive/irq.c: Set up INTC to use encoded interrupt pins,
+	and set up non-Overdrive interrupts as imask type.
+	* include/asm-sh/pci.h: Move declaration of struct pci_dev so declared
+	before used
+	* arch/sh/kernel/io_se.c: Typo fix
+	* arch/sh/stboards/{led.c,harp.h}: Add LED_ON and LED_OFF macros
+
+2001-05-24  M. R. Brown <mrbrown@linuxdc.org>
+
+	LinuxDC drivers merge.
+
+	* Documentation/Configure.help: Added documentation for CONFIG_FB_PVR2
+	and CONFIG_FB_PVR2_DEBUG.
+	* Documentation/fb/00-INDEX: Added line for pvr2fb.txt.
+	* Documentation/fb/pvr2fb.txt: New file, document features of the pvr2
+	frame buffer.
+	* arch/sh/config.in: Conditionalized Maple driver options, set
+	CONFIG_SH_RTC to "n" when configuring for Dreamcast.
+	* arch/sh/kernel/mach_dc.c: Machine vector: Use NR_IRQS standard
+	(reflects new IRQ count), added systemasic_irq_demux.
+	* arch/sh/kernel/pci-dc.c: Include new asm/dc_sysasic.h.  Removed
+	definition of GAPSPCI_INTC and updated GAPSPCI_IRQ to new IRQ
+	convention. (disable_gapspci_irq, enable_gapspci_irq,
+	mask_and_gapspci_irq, end_gapspci_irq, startup_gapspci_irq,
+	shutdown_gapspci_irq, gapspci_irq_type): Removed.  (gapspci_init):
+	Removed assignment of gapspci_irq_type.
+	* arch/sh/kernel/setup_dc.c: New includes to reflect IRQ standard.
+	(disable_systemasic_irq, enable_systemasic_irq, ack_systemasic_irq,
+	end_systemasic_irq, startup_systemasic_irq, shutdown_systemasic_irq,
+	systemasic_int, systemasic_irq_demux): New routines.
+	(setup_dreamcast): Assign systemasic_int to respective irq_desc IRQs.
+	* drivers/video/Config.in: Added configuration options for
+	CONFIG_FB_PVR2, removed options for CONFIG_FB_DC.
+	* drivers/video/Makefile: Added dependency for CONFIG_FB_PVR2, removed
+	dependancy for CONFIG_FB_DC.
+	* drivers/video/dcfb.c: Removed file.
+	* drivers/video/fbmem.c: Added externs for pvr2fb routintes, removed
+	declaration of dcfb_init().  Added pvr2 to the list of framebuffers,
+	removed dcfb from that list.
+	* drivers/video/pvr2fb.c: New file, PowerVR 2 frame buffer support,
+	replaces generic DC fb support.
+	* include/asm-sh/dc_sysasic.h: New file, Definitions for Dreamcast
+	hardware events.
+	* include/asm-sh/irq.h: Added OFFCHIP_NR_IRQS def. for Dreamcast,
+	added declaration of systemasic_irq_demux().
+
+2001-05-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.5-pre5.
+
+	* arch/sh/kernel/hd64465_gpio.c, arch/sh/kernel/io_cat68701.c,
+	arch/sh/kernel/io_dc.c, arch/sh/kernel/io_ec3104.c,
+	arch/sh/kernel/irq_intc2.c, arch/sh/kernel/mach_dc.c,
+	arch/sh/kernel/setup_dc.c, arch/sh/kernel/setup_ec3104.c,
+	arch/sh/mm/cache.c, include/asm-sh/hd64465_gpio.h: Follow the
+	change of 2.4.5-pre5.  Inclusion of config.h.
+
+2001-05-24 Stuart Menefy <stuart.menefy@st.com>
+
+	* arch/sh/kernel/pci_st40.c
+	arch/sh/overdrive/{Makefile,galileo.c,mach.c,pcidma.c}
+	arch/sh/stboards/{Makefile,mach.c,pcidma.c}: Changes for new style
+	of PCI set up
+
+	* arch/sh/kernel/entry.S include/asm-sh/irq.h: Updated the number of
+	interrupts for ST40STB1
+
+2001-05-22  M. R. Brown <mrbrown@linuxdc.org>
+
+	Preliminary Dreamcast Maple Bus driver restructuring.
+
+	* drivers/dreamcast/maple/Config.in, drivers/dreamcast/maple/Makefile
+	drivers/dreamcast/maple/maple.c, drivers/dreamcast/maple/maple.h,
+	drivers/dreamcast/maple/dckbd.c, drivers/dreamcast/maple/dcmouse.c,
+	drivers/dreamcast/maple/dcpad.c: Files moved to consistent kernel
+	directories and renamed.
+	* drivers/dreamcast/Config.in, drivers/dreamcast/Makefile: Removed.
+	* drivers/maple/Config.in, drivers/maple/Makefile,
+	drivers/maple/maple.c: New files, moved from drivers/dreamcast/maple.
+	* include/linux/maple.h: New file, was
+	drivers/dreamcast/maple/maple.h.
+	* drivers/char/maple_keyb.c: New file, was
+	drivers/dreamcast/maple/dckbd.c.
+	* drivers/char/maplemouse.c: New file, was
+	drivers/dreamcast/maple/dcmouse.c.
+	* drivers/char/Makefile: Added dependencies for CONFIG_MAPLE_KEYBOARD
+	and CONFIG_MAPLE_MOUSE
+	* drivers/char/joystick/maplecontrol.c: New file, was
+	drivers/dreamcast/maple/dcpad.c.
+	* drivers/char/joystick/Config.in: Added config options for
+	CONFIG_MAPLE_CONTROL.
+	* drivers/char/joystick/Makefile: Added dependency for
+	CONFIG_MAPLE_CONTROL.
+	* Makefile: Added DRIVERS dependency for CONFIG_MAPLE.
+	* drivers/Makefile: Added dependencies for CONFIG_MAPLE.
+	* arch/sh/Makefile: Removed Dreamcast driver dependencies.
+	* arch/sh/config.in: Check for CONFIG_SH_DREAMCAST for
+	CONFIG_MEMORY_START.  Added config options for CONFIG_MAPLE_*, added
+	sources to drivers/maple/Config.in and
+	drivers/char/joystick/Config.in.
+
+2001-05-21  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.5-pre4.
+
+2001-05-17  YAEGASHI Takeshi  <t@keshi.org>
+
+	* arch/sh/kernel/pci-dc.c: New file: Dreamcast PCI routines.
+	* arch/sh/kernel/setup_dc.c: Moved PCI code to pci-dc.c.
+	* arch/sh/kernel/mach_dc.c (mv_init_pci): Removed.
+	* arch/sh/kernel/Makefile: Added rules for pci-dc.o.
+	* include/asm-sh/pci.h (PCIBIOS_MIN_IO, PCIBIOS_MIN_MEM): Added 
+	definitions for Dreamcast.
+	* drivers/net/8139too.c (rtl8139_hw_start): Keep RxConfig register's
+	cache(tp->rx_config) dirty.
+
+2001-05-16  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/pci-sh7751.c (pcibios_set_master, pci_check_direct,
+	pcibios_fixup_peer_bridges, pcibios_enable_device,
+	pcibios_set_master): Prepend KERN_INFO for printk.
+
+	* Updated to 2.4.5-pre2.
+
+2001-05-14  Dustin McIntire  <dustin@sensoria.com>
+
+	* arch/sh/kernel/sh_ksyms.c: Move CONFIG_PCI above the
+	pci_alloc_consistent.
+	* arch/sh/kernel/pci-irq.c: Removed.
+
+	Big Sur support update.
+	* include/asm-sh/pci-sh7751.h (SH7751_PCICONF13): Change the value.
+	It was 0x40.
+	(PLATFORM_ASPEN, PLATFORM_BIGSUR): Removed.
+	* arch/sh/kernel/setup_bigsur.c: Calculation change of mask and bit.
+	* arch/sh/kernel/pci-bigsur.c: Turn the clocks and clear powerdown
+	IRQ earlier.
+	* arch/sh/kernel/Makefile: Remove pci-bigsur.o.
+
+2001-05-14  Jeremy Siegel <jsiegel@mvista.com>
+
+	* include/asm-sh/machvec.h: Bug fix.  Don't overwrite the
+	definition of MACH_SE.
+
+2001-05-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	Remove support of 7750 Overdrive.
+
+	* include/asm-sh/io_od.h: Removed.
+	* arch/sh/overdrive/io_od.h: Moved from include/asm-sh, 
+	as a reference.
+
+	* include/asm-sh/pci.h: Removed the case of
+	defined(CONFIG_SH_7750_OVERDRIVE).
+	* include/asm-sh/io.h: Likewise.
+
+	* arch/sh/Makefile (SUBDIRS): Don't add arch/sh/overdrive.
+	(archclean): Don't go to overdrive subdirs, but stboards.
+
+	* arch/sh/config.in (CONFIG_SH_7750_OVERDRIVE): Deleted.
+
+2001-05-09  Ian da Silva <idasilva@mvista.com>
+
+	Solution Engine 7751 support.
+
+	* include/asm-sh/hitachi_se.h, include/asm-sh/io.h,
+	include/asm-sh/machvec.h, include/asm-sh/pci.h:
+	Add the case of CONFIG_SH_7751_SOLUTION_ENGINE.
+
+	* arch/sh/kernel/setup_se.c (init_se_IRQ): Handle the case of
+	CONFIG_SH_7751_SOLUTION_ENGINE differentry.
+
+	* arch/sh/kernel/pci-7751se.c: New file.
+
+	* arch/sh/kernel/io_se.c: Include <asm/pci.h> and <asm/pci-sh7751.h>.
+	(TOP_PCIC, PCIIOBR, PCIMBR, PCI_IO_AREA, PCI_MEM_AREA) New macros.
+	(port2adr): Fixed.  Don't include 0x2000 as MRSHPC address.
+	(se_inb, se_inb_p, se_inw, se_inl, se_outb, se_outb_p, se_outw,
+	se_outl): Handle the case of PXSEG and CONFIG_PCI.
+	(se_readb, se_readw, se_readl, se_writeb, se_writew, se_writel):
+	Handle the case of CONFIG_PCI.
+
+	* arch/sh/kernel/Makefile: Define objects for
+	CONFIG_SH_7751_SOLUTION_ENGINE.
+
+	* arch/sh/config.in (CONFIG_SH_7751_SOLUTION_ENGINE): Added.
+
+2001-05-09  Dustin McIntire  <dustin@sensoria.com>
+
+	SH7751 support and New target BIGSUR.
+
+	* include/asm-sh/bigsur.h, include/asm-sh/io_bigsur.h,
+	include/asm-sh/pci-sh7751.h, include/asm-sh/serial-bigsur.h: New
+	files.
+	* include/asm-sh/serial.h: Added inclusion of serial-bigsur.h.
+	* include/asm-sh/processor.h: Add comment for SH7751.
+	* include/asm-sh/pci.h (PCIBIOS_MIN_IO, PCIBIOS_MIN_MEM): Handle
+	cases of ST40STB1, SH7751 and BIGSUR.
+	(pcibios_set_master): Comment it out.
+	* include/asm-sh/machvec.h: Added mv_hw_bigsur bit.
+	(MACH_BIGSUR): Added.
+
+	* include/asm-sh/irq.h: Added CONFIG_CPU_SUBTYPE_SH7751 and
+	CONFIG_SH_BIGSUR.
+
+	* include/asm-sh/io.h: Added CONFIG_SH_BIGSUR.
+	* include/asm-sh/bugs.h (check_bugs): Print SH7750/SH7750.  (was:
+	only SH7750).
+
+	* drivers/pcmcia/hd64465_ss.c (hs_set_io_map): Added last argument 0,
+	for the call of hd64465_port_map.
+
+	* drivers/net/smc9194.h (chip_ids): Added SMC91C100FD.
+	* drivers/net/smc9194.c (smc_probe): The semantics IRQ2==IRQ9 is
+	only valid in PC (__i386__).
+
+	* drivers/char/sh-sci.h (CONFIG_CPU_SUBTYPE_SH7751): Added.
+
+	* arch/sh/mm/cache.c (detect_cpu_and_cache_system): SH7751 is
+	CPU_SH7750.
+
+	* arch/sh/kernel/sh_ksyms.c (__lshrdi3, flush_cache_range,
+	flush_dcache_page): Added.
+
+	* arch/sh/kernel/led_bigsur.c, arch/sh/kernel/mach_bigsur.c,
+	arch/sh/kernel/pci-bigsur.c, arch/sh/kernel/pci-irq.c,
+	arch/sh/kernel/pci-sh7751.c, arch/sh/kernel/setup_bigsur.c:
+	New files.
+
+	* arch/sh/kernel/io_hd64465.c (hd64465_isa_port2addr): Renamed
+	from POT2ADDR.  
+	(PORT2ADDR): Define as macro.
+
+	* include/asm-sh/io_bigsur.c: New file.
+	* arch/sh/kernel/entry.S (exception_handling_table): Added entries
+	for CONFIG_CPU_SUBTYPE_SH7751.
+
+	* arch/sh/kernel/pci-dma.c: New file.  Copied from stboards/pcidma.c.
+	* arch/sh/kernel/pci-sh.c: Removed.
+
+	* arch/sh/kernel/Makefile (machine-specific-objs): Added for
+	CONFIG_SH_BIGSUR.
+	(obj-$(CONFIG_SH_BIGSUR)): Added.
+	(obj-$(CONFIG_CPU_SUBTYPE_SH7751)): Added.
+	(obj-$(CONFIG_SH_BIGSUR)): Added.
+
+	* arch/sh/config.in (CONFIG_SH_BIGSUR): New target.
+	(CONFIG_CPU_SUBTYPE_SH7751): New subtype.
+
+	* arch/sh/Makefile (CFLAGS for CONFIG_DEBUG_KERNEL_WITH_GDB_STUB):
+	Added as comment.
+
+2001-05-07  Masahiro Abe <m-abe@aandd.co.jp>
+
+	* include/asm-sh/processor.h (struct sh_fpu_hard_struct): Rename
+	xd_regs to xfp_regs, and change type from long long to long.
+	(struct sh_fpu_soft_struct): Likewise.
+	* include/asm-sh/user.h (struct user_fpu_struct): Likewise.
+
+2001-05-04  YAEGASHI Takeshi  <t@keshi.org>
+
+	* drivers/dreamcast/maple/maple.h: Fixed typo.
+	* include/asm-sh/bitops.h (ffs, hweightN): Added definitions.
+	* drivers/char/sh-sci.c (sci_init_drivers): Added driver names used
+	with devfs.
+
+2001-04-30  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4.
+
+2001-04-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre8.
+
+2001-04-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre7.
+
+2001-04-24  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* config.in: Added CONFIG_RTC.
+	* arch/sh/rtc.c: Moved some definitions to include/asm-sh/rtc.h.
+	* include/asm-sh/rtc.h: Likewise
+	* include/asm-sh/mc146818rtc.h (RTC_PORT, RTC_IRQ, CMOS_READ,
+	  CMOS_WRITE, __CMOS_READ, __CMOS_WRITE): Defined.
+	* arch/sh/sh_ksyms.c (__movstr): EXPORT-ed.
+	  (__ashrdi3, __ashldi3): EXPORT-ed even if SH-3.
+
+2001-04-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* lib/rwsem.c: Remove inclusion of linux/bitops.h.
+
+	* Updated to 2.4.4-pre6.
+
+2001-04-20  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/config.in (CONFIG_RWSEM_GENERIC): Removed.
+	* include/linux/rwsem.h (down_write): Conflict merged.
+	* include/asm-sh/semaphore.h: Only valid for __KERNEL__.
+
+	* Updated to 2.4.4-pre5.
+
+2001-04-20  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/config.in: define CONFIG_RWSEM_GENERIC.
+	* include/asm-sh/bitops.h (__set_bit, __clear_bit): defined.
+	* include/asm-sh/semaphore.h: Follow i386 implementation.
+	* include/linux/rwsem.h: small fix.
+	* lib/rwsem.c: Added include linux/bitops.h.
+
+2001-04-19  YAEGASHI Takeshi  <t@keshi.org>
+
+	* drivers/dreamcast/maple/maple.h: Added copyright notice.
+
+	* arch/sh/kernel/setup_dc.c: Added prototype for gapspci_init().
+	(pci_alloc_consistent): Fixed printk format string.
+
+2001-04-18  YAEGASHI Takeshi  <t@keshi.org>
+
+	* arch/sh/kernel/time.c, drivers/net/8139too.c: MACH_DREAMCAST
+	should be used to keep the generic kernel working.
+
+	* drivers/net/8139too.c (rtl8139_start_xmit): Force to use the
+	dedicated SRAM buffer for bus-mastering.
+
+	* include/asm-sh/mc146818rtc.h: New file: Added to satisfy the
+	include from drivers/char/rtc.c.
+
+2001-04-18  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre4.
+
+2001-04-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre3.
+
+2001-04-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre2.
+
+2001-04-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.4-pre1.
+
+2001-04-01  YAEGASHI Takeshi  <t@keshi.org>
+
+	Added SEGA Dreamcast support with the code released from the FFII
+	(http://www.ffii.org/).
+
+	* arch/sh/config.in: Added Dreamcast Configuration.
+	* arch/sh/Makefile: Added build rules of Dreamcast drivers.
+	* arch/sh/kernel/Makefile: Added Dreamcast platform support.
+	* arch/sh/kernel/io_dc.c: New file: Likewise.
+	* arch/sh/kernel/mach_dc.c: New file: Likewise.
+	* arch/sh/setup_dc.c: New file: Likewise
+	* include/asm-sh/io_dc.h: New file: Likewise.
+	* arch/sh/kernel/time.c (time_init): Added Dreamcast RTC override.
+	* drivers/video/dcfb.c: New file: Dreamcast framebuffer driver.
+	* drivers/pci/pci.ids: Updated vendor/device ids for SEGA Broadband
+	Adapter.
+	* drivers/net/8139too.c(board_t, board_info, rtl8139_pci_tbl,
+	rtl8139_rx_config, RX_BUF_LEN_IDX): Added SEGA Broadband Adapter
+	support.
+	* drivers/dreamcast/Config.in: New file: Dreamcast driver support.
+	* drivers/dreamcast/Makefile: New file: Likewise.
+	* drivers/dreamcast/maple/Config.in: New file: MAPLE Bus driver
+	support.
+	* drivers/dreamcast/maple/Makefile: New file: Likewise.
+	* drivers/dreamcast/maple/maple.[ch]: New files: MAPLE Bus core driver.
+	* drivers/dreamcast/maple/dckbd.c: New file: Dreamcast Keyboard driver.
+	* drivers/dreamcast/maple/dcmouse.c: New file: Dreamcast Mouse driver.
+	* drivers/dreamcast/maple/dcpad.c: New file: Dreamcast Controller.
+	driver
+	* include/linux/input.h (BUS_MAPLE): Added new bus type.
+	* drivers/char/Makefile (KEYBD): Removed older Dreamcast keyboard
+	support.
+	* include/asm-sh/keyboard.h (dreamcast_kbd_init_hw): likewise.
+
+	* arsh/sh/kernel/sh_ksyms.c: Include asm/pgalloc.h for
+	flush_tlb_page prototype.
+
+2001-03-31  NIIBE Yutaka  <gniibe@m17n.org>
+
+	Follow the change in 2.4.3. 
+	* include/asm-sh/pgtable.h (__handle_bad_pmd,
+	__handle_bad_pmd_kernel): Removed.
+
+	* arch/sh/kernel/ptrace.c (sys_ptrace): Follow the change of x86
+	version.
+	* arch/sh/mm/extable.c (search_exception_table): Likewise.
+	* arch/sh/mm/init.c (do_check_pgt_cache): Likewise.
+	* arch/sh/mm/init.c (get_pte_slow, get_pte_kernel_slow,
+	__handle_bad_pmd_kernel, __handle_bad_pmd, get_bad_pte_table,
+	empty_bad_pte_table): Removed.
+	* include/asm-sh/pgtable-2level.h (pgd_clear): Be Function.
+	* include/asm-sh/pgalloc-2level.h: Removed.
+	* arch/sh/mm/ioremap.c (remap_area_pmd): Use pte_alloc with init_mm
+	(was pte_alloc_kernel).
+	(remap_area_pte): Add checks to BUG.
+	Check address!=0 for the condition of do-while.
+	(remap_area_pmd): Add check to BUG.
+	Use pte_alloc with init_mm (was pte_alloc_kernel).
+	Check address!=0 for the condition of do-while.
+	(remap_area_pages): Use pgd_offset (was pgd_offset_k).
+	Add check to BUG, spin_lock/unlock.
+	Use pmd_alloc of init_mm instead of pmd_alloc_kernel.
+	(__ioremap): Change the compare to 0x100000 to '<' (was: '<=').
+	Return error.
+
+	Updated to 2.4.3.
+	* arch/sh/mm/fault.c (do_page_fault): Use up_read/down_read
+	(was: up/down).
+	* arch/sh/kernel/sys_sh.c (do_mmap2): Use up_write/down_write
+	(was: up/down).
+	* arch/sh/kernel/sh_ksyms.c (flush_tlb_page): EXPORT-ed.
+
+2001-03-09  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* include/asm-sh/sigcontext.h (struct sigcontext): Make it
+	compatible with glibc-2.2.2.
+
+2001-03-08  SUGIOKA Toshinobu  <sugioka@itonet.co.jp>
+
+	* drivers/ide/ide-geometry.c: Added '#ifdef __i386__'
+	for i386 specific include file.
+
+2001-03-04  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (call_dpf): Cosmetic changes.
+	Use "tst r0, r0" instead of "tst #0xff, r0".
+	(ret_with_reschedule): Likewise.
+
+2001-03-04  Philipp Rumpf  <prumpf@tux.org>
+
+	* arch/sh/kernel/process.c (kernel_thread): Remove bogus comment.
+	Bug fix.  Use "tst r0, r0" instead of "tst #0xff, r0".
+
+2001-02-24  Bryan Rittmeyer <bryan@ixiacom.com>
+
+	* arch/sh/kernel/sh_ksyms.c (strncat): Added.
+
+2001-02-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/rtc.c (RTC_BIT_INVERTED): New macro.
+	(sh_rtc_gettimeofday): Use RTC_BIT_INVERTED.
+	(sh_rtc_settimeofday): Work around implemented.
+
+	Updated to 2.4.2.
+	* include/asm-sh/termios.h (N_IRDA): Incorporate changes of 2.4.2.
+	* include/asm-sh/socket.h, arch/sh/kernel/irq.c,
+	arch/sh/kernel/process.c, arch/sh/kernel/setup.c: Likewise.
+
+2001-02-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/setup_cqreek.c (mv_ioremap, mv_iounmap,
+	mv_rtc_gettimeofday, mv_rtc_settimeofday): Define.
+
+2001-02-07  Stuart Menefy <stuart.menefy@st.com>
+
+	Added support for ST40STB1
+	* arch/sh/kernel/pci_st40.[ch]: New files
+	* arch/sh/kernel/irq_intc2.c: New file
+	* arch/sh/kernel/Makefile: Added build of ST40 files
+	* arch/sh/kernel/irq_ipr.c: Added support for second SCIF
+	* arch/sh/kernel/time.c: Added support for FRQCR changes
+	* arch/sh/mm/cache.c: Added ST40 to list of chip types
+	* arch/sh/config.in: Added ST40 CPU and ST boards
+	* arch/sh/overdrive/Makefile: Renamed config option
+	* include/asm-sh/bugs.h: Added ST40STB1 to list of chips
+	* include/asm-sh/pci.h: Added DMA support
+	* include/asm-sh/processor.h: Added ST40STB1 to list of chips
+
+	Added support for ST40STB1 HARP and Overdrive platforms
+	* arch/sh/Makefile: Build in stboards directory if needed
+	* include/asm-sh/io.h: Added HARP and Overdrive IO
+	* arch/sh/stboards/{harp.h,irq.c,led.c,mach.c,pcidma.c,setup.c},
+	arch/sh/stboards/Makefile: New files
+
+	* arch/sh/kernel/io_hd64465.c, include/asm-sh/io_hd64465.h: Added 
+	logical shift capability to address mapping code.
+
+	* arch/sh/kernel/setup_hd64465.c, include/asm-sh/serial.h: Fixed
+	support for 16550 serial port.
+
+	* arch/sh/kernel/rtc.c: Fix 1/128 second support.
+
+	* arch/sh/kernel/setup.c: Added some global variables needed for
+	frame buffer support.
+
+	* drivers/char/sh-sci.[ch]: Added ST40STB1 support, and claim
+	interrupt on open, allowing SCI(F) to be shared by drivers.
+
+	* drivers/net/tulip/tulip_core.c: Added SH specific defines
+
+	* drivers/pci/pci.ids: Added STE10/100 device ID
+
+	* include/asm-sh/irq.h: Added ST40STB1 defines, and reworked
+	defintion of NR_IRQS to make easier to manage
+
+	* include/asm-sh/hd64461.h, include/asm-sh/hd64465.h: Use new
+	irq.h defines for peripherial chip interrupts
+
+2001-02-02  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.1.
+	* arch/sh/kernel/traps.c: Include linux/config.h.
+
+2001-01-31  Philipp Rumpf  <prumpf@tux.org>
+
+	* arch/sh/kernel/setup_ec3104.c (get_pending_interrupts):
+	New function.
+
+	* drivers/char/ec3104_keyb.c (ec3104_keyb_receive): Removed.
+	(e5_checksum, e5_wait_for_cts, e5_send_byte, e5_send_packet,
+	e5_receive): New functions.
+	(struct e5_struct): Renamed from ec3104_keyb_struct.
+
+	* drivers/video/Config.in (CONFIG_E1355_REG_BASE, 
+	CONFIG_E1355_FB_BASE): New config variables.
+	* drivers/video/epson1355fb.c (e1355fb_init): Don't call
+	disable_hw_cursor from here.
+	(AERO_HACKS): Undefined.
+
+2001-01-30  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.1-pre12.
+
+2001-01-29  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.1-pre11.
+	* arch/sh/kernel/signal.c: Remove the decl. of sys_wait4.
+
+2001-01-27  Yutaro Ebihara  <ebiharaml@si-linux.com>
+
+	* arch/sh/config.in (CONFIG_CF_ENABLER): Valid when
+	CONFIG_SH_CAT68701.
+
+2001-01-26  Yutaro Ebihara  <ebiharaml@si-linux.com>
+
+	Add support for CAT68701 board computer.
+	* arch/sh/config.in (CONFIG_SH_CAT68701): Added.
+	* arch/sh/kernel/Makefile (obj-$(CONFIG_SH_CAT68701)): Added.
+	* arch/sh/kernel/io_cat68701.c: New file.
+	* arch/sh/kernel/mach_cat68701.c: New file.
+	* include/asm-sh/io.h (CONFIG_SH_CAT68701): Include
+	asm/io_cat68701.h.
+	* inlude/asm/io_cat68701.h: New file.
+	* include/asm-sh/irq.h (cat68701_irq_demux): New function.
+
+2001-01-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.1-pre10.
+
+2001-01-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/signal.c (setup_frame, setup_rt_frame): 
+	Use flush_cache_sigtramp.
+
+	* arch/sh/mm/cache.c (flush_cache_sigtramp): Implemented.
+
+	* include/asm-sh/pgtable.h (_PAGE_SHARED): Always _PAGE_U0_SHARED.
+	(was conditionally _PAGE_HW_SHARED on SH-3).  With _PAGE_HW_SHARED,
+	all processes share the page, while proper semantics is "some
+	processes share the page".
+	(flush_cache_sigtramp): New function.
+
+	* Updated to 2.4.1-pre9.
+
+	* arch/sh/kernel/sh_ksyms.c (__udivsi3, __sdivsi3): Added.
+
+2001-01-13  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.1-pre3.
+
+2001-01-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/sh_ksyms.c (__udivsi3_i4, __sdivsi3_i4): Removed.
+
+2001-01-10  Bryan Rittmeyer <bryan@ixiacom.com>
+
+	* arch/sh/kernel/entry.S: Fixed typo for SR and added "OFF_" for SP.
+
+2001-01-10  Denis Dowling <dpd@preston.net>
+
+	* arch/sh/kernel/entry.S: Change RX-->OFF_RX.
+
+2001-01-08  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/net/stnic.c (stnic_probe): Set the MAC address from BIOS.
+
+	* include/asm-sh/sh_bios.h (sh_bios_shutdown): New function.
+	* arch/sh/kernel/sh_bios.c (BIOS_CALL_ETH_NODE_ADDR): Added.
+	(sh_bios_get_node_addr): New function.
+
+2001-01-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.0.
+	* arch/sh/kernel/rtc.c: Remove the inclusion of <linux/config.h>.
+
+2001-01-04  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/process.c (machine_halt, machine_restart): 
+	Call sh_bios_shutdown.
+	* include/asm-sh/sh_bios.h (sh_bios_shutdown): New function.
+	* arch/sh/kernel/sh_bios.c (sh_bios_shutdown): New function.
+	(BIOS_CALL_SHUTDOWN): Added.
+
+	* arch/sh/kernel/sh_bios.c (CONFIG_SH_STANDARD_BIOS): No conditional
+	compilation, since it's done in Makefile.
+	(linux/config.h): Not included.
+
+	* drivers/net/stnic.c (STNIC_DELAY): We need more delay for
+	SolutionEngine 7709A.
+
+	* arch/sh/lib/delay.c (__const_udelay): Fixed.  Use DMULU.
+
+2001-01-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* Updated to 2.4.0-prerelease.
+	* include/asm-sh/{bugs.h,delay.h}: Follow 2.4.0-prerelease.
+	* arch/sh/lib/delay.c: Ditto.
+
+2001-01-03  Mitch Davis  <mdavis@pocketpenguins.com>
+
+	* arch/sh/config.in, arch/sh/kernel/entry.S, 
+	arch/sh/kernel/traps.c: Get the setting of the VBR from
+	the previous value (set by bootloader) instead of explicitly
+	hard-coding it.
+	* arch/sh/config.in: Pull in the Linux Kernel Input (LKI)
+	device configuration.
+	* arch/sh/kernel/sh_ksyms.c: Export some symbols we need.
+	* include/asm-sh/segment.h: Some old header files expect this
+	file to exist.
+	* drivers/char/Makefile: Added an entry for DMIDA keyboard
+	support.
+	* kernel-official/drivers/input/keybdev.c: Added an entry
+	for SuperH LKI support.
+	* drivers/char/sh-sci.h: The SCI port on the DMIDA is used
+	to drive an SPI bus in synchronous mode.  So it's not available
+	as a general-purpose async serial port.  Disable it.
+
+2001-01-03  Mitch Davis  <mdavis@pocketpenguins.com>
+
+	* include/asm-sh/hd64465_gpio.h,
+	arch/sh/kernel/hd64465_gpio.c,
+	arch/sh/kernel/Makefile: Added support for the 5
+	8-bit GPIO ports on the HD64465.
+	* arch/sh/kernel/io_hd64465.c: Added some debugging DIPRINTKs.
+	* include/asm-sh/hd64465.h: Added register definitions
+	for the HD64465's onboard PS/2 mouse/keyboard and USB
+	controllers.
+
+Local Variables:
+mode: change-log
+left-margin: 8
+fill-column: 76
+version-control: never
+End:

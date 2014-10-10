@@ -1,0 +1,902 @@
+1999-12-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/sys_sh.c (do_mmap2, old_mmap, sys_mmap2): Follow
+	the change of 2.3.32.
+
+	* arch/sh/kernel/head.S (_start): Change the name of label from _stext.
+
+	* include/linux/linkage.h: Dont prepend "_" for label.
+	* arch/sh/vmlinux.lds.S: Likewise.
+	* include/asm-sh/system.h (switch_to): Likewise.
+
+	* include/asm-sh/stat.h: Follow the change of 2.3.34.
+
+	* arch/sh/kernel/entry.S: Added getrlimit, mmap2, truncate64,
+	ftruncate64, stat64, lstat64, and fstat64.
+	* include/asm-sh/unistd.h: Likewise.
+
+1999-12-22  John Hassey  <hassey@gte.net>
+
+	* arch/sh/kernel/irq_onchip.c (init_IRQ): Initialize the interrupt
+	controller.
+
+1999-12-19  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/defconfig: Updated.
+	* arch/sh/config.in (CONFIG_SUPERH): Defined.
+	(CONFIG_CF_ENABLER): New config.
+
+	* arch/sh/kernel/irq_imask.c: New file.
+	* arch/sh/kernel/entry.S (restore_all): Inherit IMASK of SR.
+	* arch/sh/kernel/Makefile: Use CONFIG_CF_ENABLER.
+	* arch/sh/kernel/cf-enabler.c: New file.
+
+	* include/asm-sh/irq.h (TIMER_PRIORITY): Changed from 1.
+	The reason is for my board.  Should consider later.
+
+1999-12-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/string.h (struct_cpy): Follow the changes of
+	2.3.32.
+	* arch/sh/kernel/process.c (copy_thread): Use struct_cpy.
+
+1999-12-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/config.in: Added PCI support configuration.
+	* arch/sh/kernel/time.c (get_cpu_mhz): New function.
+
+1999-12-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/cache.h: Follow the change of 2.3.30.
+
+1999-12-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/irq.h (TIMER_IPR_OFFSET): Spell fixed.
+
+1999-12-07  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h: Updated for 2.3.30.
+	* include/asm-sh/pgtable-2level.h (set_pte, set_pmd, set_pgd): Added.
+	* include/asm-sh/page.h (__pte, __pmd, __pgd): Added.
+	* include/asm-sh/hardirq.h: Follow the change of 2.3.30.
+
+	* arch/sh/mm/init.c (__handle_bad_pmd, __handle_bad_pmd_kernel, 
+	get_pte_kernel_slow, get_pte_slow): Use set_pmd.
+	* include/asm-sh/pgalloc.h (pte_alloc_kernel, pte_alloc): Ditto.
+
+1999-11-30  Toshiharu Nozawa <nozawat@hitachi-ul.co.jp>
+
+	* arch/sh/kernel/time.c (time_init): Implement better mesurement
+	using RTC interrupt.
+
+1999-11-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/setup.c (setup_arch): Updated for 2.3.30.
+	* include/asm-sh/io.h (IO_SPACE_LIMIT): Added for 2.3.30.
+	(inw_p, outw_p): Added.
+
+	* include/asm-sh/ide.h (ide_default_io_base): Changed for my board.
+	* include/asm-sh/hdreg.h (ide_ioreg_t): Changed to unsigend int.
+
+	* arch/sh/config.in: Added block device configuration.
+
+1999-11-26  Toshiharu Nozawa <nozawat@hitachi-ul.co.jp>
+
+	* drivers/char/sh-scif.c (sci_receive_chars): Add dummy read
+	before clearing flag.
+
+	* arch/sh/kernel/time.c (time_init): Implement better mesurement.
+
+1999-11-25  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgalloc.h: New file.
+	* include/asm-sh/pgalloc-2level.h: New file.
+	* arch/sh/kernel/pci-sh.c: New file.
+	* include/asm-sh/pci.h: New file.
+	* arch/sh/kernel/irq.c: Follow the changes of 2.3.29.
+	* arch/sh/mm/init.c, arch/sh/mm/fault.c, arch/sh/mm/ioremap.c: 
+	Likewise.
+
+	* include/asm-sh/highmem.h: Removed.
+
+1999-11-23  Toshiharu Nozawa <nozawat@hitachi-ul.co.jp>
+
+	* arch/sh/kernel/time.c (time_init): Implement getting clock
+	(system clock and module clock) information.
+
+1999-11-18  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/{sh-scif.c,sh-sci.c}: Avoid race conditions.
+	Don't initialize the module if c_cflags is same.
+	
+1999-11-17  Toshiharu Nozawa <nozawat@hitachi-ul.co.jp>
+
+	* drivers/char/sh-scif.c: Use ctrl_in, ctrl_out for SCSCR, SCSMR
+	and SCFCR.  It's accessed as byte for SH-3.
+
+1999-11-16  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/io.h (ctrl_in, ctrl_out): New macro.
+
+1999-11-15  Sugioka Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/kernel/entry.S (system_call): Bug fix.  Change
+	cmp/ge --> cmp/hs.
+
+1999-11-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/irq_onchip.c: Include <linux/config.h>.
+
+	* include/asm-sh/dma.h: Include <asm/io.h>.
+
+	* include/asm-sh/div64.h: New file.
+
+	* arch/sh/kernel/process.c (get_wchan): New function.
+
+	* arch/sh/mm/init.c (paging_init,mem_init,si_meminfo): Follow the
+	changes of 2.2.27.
+	* include/asm-sh/processor.h (KSTK_EIP, KSTK_ESP): Ditto.
+
+	* drivers/char/sh-scif.c: Incorporate changes of sh-sci.c,
+	to be real TTY support.
+
+1999-11-10  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (__flush_page_to_ram): Renamed from
+	flush_page_to_ram.
+
+	* include/asm-sh/dma.h (MAX_DMA_ADDRESS): Add __MEMORY_START.
+	* include/asm-sh/pgtable.h (page_pte_prot): Removed.
+	(__flush_page_to_ram): Renamed from flush_page_to_ram.
+	(flush_page_to_ram): New Macro.
+
+1999-11-10  YAEGASHI Takeshi  <yaegashi@ma.kcom.ne.jp>
+
+	* include/asm-sh/pgtable.h (_PAGE_CHG_MASK, PAGE_NONE,
+	PAGE_SHARED, PAGE_COPY, PAGE_READONLY, PAGE_KERNEL,
+	PAGE_KERNEL_RO): Add _PAGE_CACHABLE.
+
+1999-11-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/mmu_context.h (set_asid): Don't change
+	the value of other part of PTEH.
+
+	* include/asm-sh/shmparam.h (SHMLBA): Incorporate the changes
+	of pre-2.3.26-2.
+
+1999-11-05  YAEGASHI Takeshi  <yaegashi@ma.kcom.ne.jp>
+
+	* arch/sh/kernel/sys_sh.c (sys_mmap): Bug fix for arguments.
+
+1999-11-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/page.h (__pa,__va,MAP_NR): Changed not using
+	__PAGE_OFFSET.
+
+	* arch/sh/kernel/setup.c (parse_mem_cmdline): Followed the changes
+	of __pa and __va.
+
+	* include/asm-sh/pgtable-2level.h (SWP_ENTRY): Moved to pgtable.h.
+	* include/asm-sh/page.h (__pte,__pmd,__pgd): Removed.
+
+	Do we need getrlimit changes?
+
+1999-10-31  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/fault.c (__flush_tlb_page): Bug fix.  Set ASID before
+	doing the flush of TLB.
+
+	Cosmetic changes around SuperH MM.
+	* arch/sh/mm/fault.c (update_mmu_cache): Don't set PTEH register.
+
+	* arch/sh/kernel/process.c (copy_thread): Removed setting
+	p->mm->context.  It's done in copy_mm.
+	* include/asm-sh/mmu_context.h (destroy_context): Don't
+	need to reset mm->context.
+
+1999-10-30  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/fault.c: Handle TLB miss of vmalloc area.
+
+	* drivers/char/sh-sci.c: Include serialP.h, not include
+	serial_reg.h.
+	(sci_transmit_chars): Bug fix.  Clear GS_TX_INTEN flag
+	when clearing TIE flag.
+
+1999-10-29  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/resource.h (INIT_RLIMITS): Follow the change
+	of 2.3.24.
+	* include/asm-sh/pgtable-2level.h (pgd_clear): Do nothing.
+	* arch/sh/kernel/setup.c (setup_arch): Follow the changes of
+	2.3.24.
+
+	* include/asm-sh/uaccess.h (__strnlen_user): Minor fix.
+
+1999-10-28  YAEGASHI Takeshi  <yaegashi@ma.kcom.ne.jp>
+
+	* arch/sh/lib/checksum.S: Bug fix.  Change bf/s --> bt/s.
+
+1999-10-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/uaccess.h (__strnlen_user): Bug fix.  Don't
+	fetch the memory over the boundary.
+	(strnlen_user): Bug fix. 'n ' could be large value when it's
+	used through strlen_user.  Don't use access_ok with 'n'.
+
+1999-10-27  YAEGASHI Takeshi  <yaegashi@ma.kcom.ne.jp>
+
+	* arch/sh/kernel/irq_onchip.c: Support extended on-chip I/O.
+	* include/asm-sh/irq.h (NR_IRQS): Ditto.
+
+	* include/asm-sh/io.h (outsb,outsw,outsl,insb,insw,insl): Added.
+
+	* drivers/char/sh-scif.c: Add SH-3 support.
+
+	* arch/sh/kernel/time.c (do_timer_interrupt): Increment the
+	register.
+
+	* arch/sh/kernel/entry.S (INTEVT): Use INTEVTE2 for SH7709.
+
+	* arch/sh/config.in: Introduce CONFIG_CPU_SUBTYPE.
+	Config added for Network device drivers.
+
+1999-10-27  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/string.h (memscan): Bug fix.  Use memchr.
+
+	* include/asm-sh/bitops.h (ext2_set_bit and others): Little
+	endian support.
+
+	* arch/sh/kernel/head.S: Remove entry for MEMORY_END, followed
+	changes of setup.c.  Reported by Jiu Zheng.
+
+1999-10-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/spinlock.h: This file is used only for SMP.
+	Reported by Manfred Spraul.
+
+1999-10-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/ioctls.h
+	(TCGETS,TCSETS,TCSETSW,TCSETSF,TIOCGLCKTRMIOS,TIOCSLCKTRMIOS): Use
+	Immediate 0x54XX value as struct termios is different between
+	kernel and glibc.
+
+	* arch/sh/kernel/entry.S (system_call): Add debug output to LED.
+
+	* drivers/char/sh-sci.c (sci_set_real_termios): Bug fix.
+	Enable receive interrupt, or we lose inputs.
+
+1999-10-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/pgtable.h (pte_pagenr): substract the offset
+	__MEMORY_START.
+	(mk_pte): add the offset __MEMORY_START.
+
+1999-10-22  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/setup.c (setup_arch): Follow the change of 2.3.23.
+	* arch/sh/mm/init.c (show_mem, pageing_init, mem_init, and bad
+	page handling): Follow the change of 2.3.23.
+	* include/asm-sh/highmem.h, include/asm-sh/pgtable-2level.h: New
+	headers.
+	* include/asm-sh/dma.h (MAX_DMA_ADDRESS): Defined.
+	* include/asm-sh/pgtable.h: Follow the changes of 2.3.23.
+	* drivers/char/{sh-scif.c,sh-sci.c} (serial_console_init): 
+	Follow the interface change of 2.3.23.
+
+	* arch/sh/kernel/setup.c (MEMORY_END): Removed.
+
+1999-10-21  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (restore_all, debug): Bug fix.  Fix SSR
+	race condition (SSR could be modified by interrupts).
+
+1999-10-20  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/system.h (__sti,__cli,__save_and_cli): Relax the
+	register constraints.
+	(__save_and_cli): Improve a bit.
+
+1999-10-19  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/{sh-scif.c,sh-sci.c}: Bug fix.  FLAGS is long
+	instead of short.  Fix typo for cli (not cil).
+	Thanks to Alexei Minayev and Jiu Zheng.
+
+	* arch/sh/kernel/irq_onchip.c (disable_onChip_irq,
+	enable_onChip_irq): Protect critical regions.
+
+1999-10-17  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/string.h (__HAVE_ARCH_MEMCHR): Defined.
+	* arch/sh/lib/memchr.S: New file.
+
+	* include/asm-sh/spinlock.h: Merged with Kaz'.
+
+	* arch/sh/kernel/setup.c (setup_arch): Set command_line.
+
+	* arch/sh/kernel/entry.S (exception_handling_table): Set
+	'none' for entry #0, to avoid spurious interrupt.  Questionable.
+
+1999-10-16  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/{sh-scif.c,sh-sci.c}: Protect critical regions.
+	Bug fix for sci_chars_in_buffer (it's for *transmit* not receive).
+
+1999-10-15 Tetsuya Okada <okayan@c-creators.co.jp>
+
+	* arch/sh/config.in, arch/sh/kernel/time.c (set_rtc_time):
+	Implemented.
+
+1999-10-14  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (system_call): Bug fix of the case
+	with arguments on the stack.
+
+1999-10-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/uaccess.h (__strnlen_user,strnlen_user): Changed
+	from {__,}strlen_user.
+
+	* arch/sh/kernel/entry.S (sys_call_table): sys_mmap.
+	* arch/sh/kernel/sys_sh.c (sys_mmap): Implemented.
+
+1999-10-11  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/{sh-scif.c,sh-sci.c} (gdb_detach):
+	Conditionalize the interaction with the value of in_gdb.
+
+	* arch/sh/mm/init.c (paging_init): Initialize asid.
+
+	* arch/sh/kernel/irq_onchip.c (no_irq_type): Moved to irq.c.
+
+	* include/asm-sh/checksum.h (ip_fast_csum): cmp/eq works only
+	for register "r0".
+	Thanks to Mikhail Sogrine <sogrine@Informatik.Uni-Tuebingen.De>
+	and Tetsuya Okada <okayan@c-creators.co.jp>
+
+1999-10-10 Tetsuya Okada <okayan@c-creators.co.jp>
+
+	* arch/sh/kernel/time.c (get_rtc_time): Implemented for on chip
+	RTC.
+
+1999-10-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (none): Do nothing for NMI.
+
+	* drivers/char/sh-scif.c (sci_transmit_chars,sci_receive_chars):
+	Bug fix for counting room.
+
+1999-10-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/{signal.h,socket.h,termbits.h,termios.h,types.h}:
+	Updated.
+
+	* include/asm-sh/smplock.h: Merge Kaz's.  And rename it from
+	smp_lock.h.
+
+1999-10-05  Sugioka Toshinobu  <sugioka@itonet.co.jp>
+
+	* arch/sh/mm/init.c: Initialized to MMU_CONTEXT_FIRST_VERSION.
+
+1999-10-05  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/vmlinux.lds.S: New section ".empty_zero_page".
+
+	* drivers/char/sh-scif.c (gdb_detach): Change trap #.
+	(SCSCR_INIT): New macro.
+	(SCI_IRP_OFFSET): Bug fix.
+
+	* arch/sh/kernel/entry.S (fixup_syscall_argerr): Implemented.
+
+	* include/asm-sh/uaccess.h: Use .balign.
+
+1999-10-04  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/sh-sci.c: Implement TTY.
+
+	* drivers/char/sh-scif.c (sci_enable_tx_interrupts): Handle
+	interrupt request flag correctly.
+	(sci_interrupt): Call sci_enable_tx_interrupts.
+
+1999-10-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/irq_onchip.c
+	(enable_onChip_irq,disable_onChip_irq): Fixed the address
+	calculation.
+
+1999-10-02  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/ioctls.h (TIOCMBIS,TIOCMBIC,TIOCMSET): Fixed the
+	typo of type.
+
+	* arch/sh/kernel/entry.S (handle_exception): Fixed the entry
+	position.
+
+	* drivers/char/sh-scif.c: Implement serial TTY.
+
+1999-10-01 Tetsuya Okada <okayan@c-creators.co.jp>
+
+	* drivers/char/sh-scif.c: Conditionalize with
+	CONFIG_DEBUG_KERNEL_WITH_GDB_STUB.
+
+1999-09-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/config.in(CONFIG_MEMORY_END): Removed.
+
+	* arch/sh/vmlinux.lds.S (section .data.disk_image): Removed.
+
+	* arch/sh/kernel/test-img.c: Removed.
+	* arch/sh/kernel/Makefile(O_OBJS): Remove test-img.o.
+
+	* arch/sh/kernel/signal.c (setup_frame,setup_rt_frame): Bug fix
+	for little endian machine.
+
+	* arch/sh/lib/memcpy.S: Bug fix: CONFIG_LITTLE_ENDIAN -->
+	__LITTLE_ENDIAN__.
+
+1999-09-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/defconfig: Updated.
+
+	* arch/sh/kernel/head.S: Assumes arguments come with register R4&R5.
+	* arch/sh/kernel/setup.c (setup_arch): Introduce new boot interface
+	"BabeFace".
+
+	* include/asm-sh/bugs.h (check_bugs): Set loops_per_sec, and display
+	CPU type.
+
+	* include/asm-sh/processor.h: New enumeration for CPU type.
+
+	* arch/sh/mm/cache.c (detect_cpu_and_cache_system): New function.
+
+	* arch/sh/config.in: Follow the change of the name of sh-sci.c and
+	sh-scif.c.
+
+	* driver/char/{sh-sci.c,sh-scif.c}: Renamed since they're
+	almost same between SH-3 and SH-4.
+	Thanks to Mikhail Sogrine <sogrine@Informatik.Uni-Tuebingen.De>.
+
+1999-09-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S, include/asm-sh/ptrace.h: Stack layout change.
+	(error): Bug fix.
+
+	* arch/sh/kernel/signal.c, arch/sh/kernel/process.c: Follow the
+	interface change of ptrace.h.
+
+	* include/asm-sh/ptrace.h: Rename the member u_regs to regs.
+	Introduce new member "sp".
+
+	* include/asm-sh/sigcontext.h(struct sigcntext): Rename the members.
+
+	* include/asm-sh/elf.h (ELF_PLAT_INIT): Taken from Kaz'
+	Implementation.  Don't know if it's really needed or not.
+
+1999-09-22  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/head.S: Set SR register.
+
+	* arch/sh/mm/cache.c (flush_icache_range): Bug fix.  Tag address
+	for IC Address Array is virtual address, not physical.
+	(flush_cache_range): Likewise.
+	(cache_flush_area): Likewise.
+	(follow_page): Removed.
+
+1999-09-21  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/process.c (show_regs): Format change a bit.
+
+	* include/asm-sh/delay.h (__delay,__udelay): Kaz' Implementatin.
+
+	* arch/sh/lib/memmove.S: Don't include <linux/config.h>, use
+	__LITTLE_ENDIAN__ instead.
+	* arch/sh/lib/memcpy.S: Likewise.
+	* arch/sh/kernel/signal.c: Likewise.
+	* include/asm-sh/elf.h: Likewise.
+	* include/asm-sh/byteorder.h: Likewise.
+	* include/asm-sh/checksum.h: Likewise.
+	(csum_tcpudp_nofold,csum_ipv6_magic): Improve a bit. (Don't branch)
+	(ip_fast_csum,csum_fold): Merge Kaz' Implementation.
+
+1999-09-20  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/{atomic.h,bitops.h}: Use save_and_cli.
+
+1999-09-19  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (ret_from_irq): Just return when
+	interrupted from kernel space.
+
+	* arch/sh/kernel/irq.c (do_IRQ): set syscall_nr = -1.
+
+	* arch/sh/mm/fault.c (update_mmu_cache): Flush icache when needed.
+
+	* arch/sh/kernel/process.c (show_regs): Display TEA value.
+	* arch/sh/kernel/traps.c (show_registers): Removed.
+
+1999-09-18  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S (system_call): Bug fix: TRA contains
+	the value = imm x 4.
+
+	* arch/sh/mm/init.c (paging_init): Use ctrl_outl.
+
+	* arch/sh/config.in (CONFIG_MEMORY_END): New config variable.
+
+	* arch/sh/kernel/{entry.S,head.S,irq_onchip.c,setup.c,time.c},
+	arch/sh/mm/{cache.c,fault.c}: Use __sh3__ and __SH4__ to
+	distinguish CPU.
+
+	* include/asm-sh/addrspace.h, include/asm-sh/cache.h,
+	include/asm-sh/elf.h, include/asm-sh/mmu_context.h,
+	include/asm-sh/pgtable.h: Likewise.
+
+	* arch/sh/Makefile (AFLAGS): Add processor specific flag.
+
+	* arch/sh/kernel/head.S: Merge Kaz' implementation of SH-4 FPU
+	initialization.
+
+	* arch/sh/kernel/time.c: SH-4 Support.
+
+	* drivers/char/sh4scif.c: New file.
+
+	* include/asm-sh/io.h (ctrl_in{b,w,l},ctrl_out{b,w,l}): New
+	Interfaces for memory mapped control register access.
+
+1999-09-17  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/fault.c (__flush_tlb_page): SH-4 Support.
+
+	* arch/sh/kernel/signal.c (setup_frame, setup_rt_frame): 
+	Add flush_icache_range.
+
+	* arch/sh/mm/cache.c: SH-4 Support.
+
+1999-09-15  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/mmu_context.h (MMU_TTB): Change for SH-4.
+	* arch/sh/kernel/entry.S (MMU_TEA): Change for SH-4.
+
+	* arch/sh/Makefile (LIBS): Nuke the 'gniibe' dependency.
+	Suggested by Mikhail Sogrine <sogrine@Informatik.Uni-Tuebingen.De>.
+
+1999-09-13  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/traps.c, include/asm-sh/semaphore.h,
+	 include/asm-sh/spinlock.h: Updated to 2.3.18.
+
+	* arch/sh/Makefile (HOSTCC): Removed.
+	Suggested by Mikhail Sogrine <sogrine@Informatik.Uni-Tuebingen.De>.
+
+1999-09-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/entry.S: Add SH-4 Support.
+
+1999-09-09  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/hardirq.h (synchronize_irq): barrier.
+
+1999-09-08  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/delay.h (__delay): Fixed.
+
+	* include/asm-sh/checksum.h (csum_tcpudp_nofold): Support both
+	endianess.
+
+	* include/asm-sh/bugs.h, arch/sh/mm/fault.c,
+	arch/sh/kernel/traps.c, arch/sh/kernel/time.c,
+	arch/sh/kernel/ptrace.c, arch/sh/kernel/irq_onchip.c: 
+	Update to 2.3.17.
+
+1999-09-07  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/atomic.h (__atomic_fool_gcc): Add "volatile".
+
+	SH4 Merge.  Phase #1.
+	* include/asm-sh/io.h,arch/sh/Makefile: Merged.
+
+	* include/asm-sh/addrspace.h: Replaced to Kaz's Implementation.
+
+	* arch/sh/kernel/process.c (dump_thread,dump_fpu): Use Kaz's
+	Implementation.
+	(copy_thread,flush_thread,exit_thread): Merged.
+	(last_task_used_math): New Variable.
+
+1999-09-06  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/mm/cache.c (cache_flush_all): Rename from
+	__fluch_cache_all, to distinguish the cache-flush-function for TLB
+	handling.  This is the mere function to flush cache, with no
+	relation to TLB handling.
+	(cache_flush_area,cache_purge_area,cache_wback_area): Implemented,
+	not works as expected on SH7708S, though.
+
+	* include/asm-sh/cache.h
+	(cache_flush_area,cache_purge_areacache_wback_area):
+	Add declarations.
+
+	* include/asm-sh/io.h (dma_cache_inv,dma_cache_wback,
+	dma_cache_wback_inv): Define appropriate functions.
+
+1999-09-05  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/checksum.h (ip_fast_csum): Fix bug.
+
+	* arch/sh/kernel/head.S: Call cache_init.
+
+	* arch/sh/mm/cache.c: New file.
+
+	* arch/sh/vmlinux.lds.S: Include <linux/config.h>.
+	* arch/sh/Makefile: Don't use -imacros.
+
+	* arch/sh/lib/memmove.S: New Implementation.
+	* arch/sh/lib/wordcopy.S: Removed.
+
+1999-09-04  Toshi Morita  <tm2@best.com>
+
+	* include/asm-sh/unistd.h (_syscall0,1,2,3,4): Add "memory" clobber.
+
+1999-09-04  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/system.h (switch_to): Save/restore GBR, so that
+	driver can use GBR.  Suggested by Toshi Morita  <tm2@best.com>.
+
+	* include/asm-sh/{hdreg.h,ide.h}: New file (Updated to 2.3.16).
+	* arch/sh/kernel/irq.c (free_irq): Update to 2.3.16 (of i386
+	version).
+	* include/asm-sh/uaccess.h (__range_ok: SIZE): Coerce to interger.
+	* include/asm-sh/system.h (__xchg): Add volatile qualifier for PTR.
+
+	* include/asm-sh/bugs.h (check_bugs): Use __init instead of
+	__initfunc.
+
+	* arch/sh/lib/memcpy.S: New implementation.
+	* arch/sh/lib/memset.S: New implementation.
+
+1999-09-03  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/kernel/sys_sh.c (sys_oldmmap, sys_oldselect,
+	sys_olduname): Removed.
+
+	* arch/sh/kernel/head.S: Implement SH4 cache initialization.
+	When clearing BSS, utilize predecrement feature of SuperH.
+
+1999-09-03  John Hassey  <hassey@gte.net>
+
+	* arch/sh/kernel/head.S (CACHE_INIT): Fix to appropriate value 0xd.
+
+1999-09-02  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/Makefile (archmrproper): Delete vmlinux.lds on "mrproper".
+
+1999-09-01  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/checksum.h, arch/sh/lib/checksum.S: 
+	Implemented with the interface of i386 version.
+	* arch/sh/lib/csum_partial_copy.c, arch/sh/lib/checksum.c: Removed.
+
+1999-08-29  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* include/asm-sh/processor.h (thread_saved_pc): Implemented.
+
+	* arch/sh/kernel/entry.S (interrupt_table): Fill `do_IRQ'.
+
+1999-08-28  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* drivers/char/sh3sci.c (put_char): Wow! GCC 2.95.1 does super
+	optimization!  Introduce barrier between asm statement.
+
+	* arch/sh/kernel/test-img.c: New image.
+	* arch/sh/kernel/setup.c (setup_arch): Set initrd_end to
+	__bss_start.
+
+	New System Call Interface.  Thanks to YAEGASHI Takeshi for
+	the discussion.
+	* arch/sh/kernel/entry.S (system_call): Implement systemcall
+	which has more than five arguments.
+
+	* include/asm-sh/unistd.h (_syscall0,1,2,3,4): Use trapa #0.
+	* arch/sh/kernel/process.c (kernel_thread): Ditto.
+	* arch/sh/kernel/signal.c (setup_frame, setup_rt_frame): Ditto.
+
+	* arch/sh/kernel/entry.S
+	(general_exception,tlb_miss,interrupt,handle_exception): Avoid
+	potential races.  We should stay BL=1 to avoid breakage of
+	hardware registers (such as TRA, MMU_TEA, k2, or k3).
+
+	* arch/sh/kernel/traps.c (DO_ERROR): Add STI.
+
+	New IRQ Programming Interface.
+	* arch/sh/kernel/irq.c, include/asm-sh/irq.h: Implemented.
+	* arch/sh/kernel/irq_onchip.c: New file.
+
+	* arch/sh/kernel/time.c (time_init): Use new scheme.
+
+1999-08-27  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* arch/sh/Makefile (arch/sh/vmlinux.lds): Add support for
+	a generation of the ldscript.
+
+	* arch/sh/vmlinux.lds.S: Renemed from vmlinux.lds.S, and
+	introduce using CONFIG_MEMORY_START, and CONFIG_LITTLE_ENDIAN.
+
+	* include/asm-sh/elf.h (EM_SH): Delete and...
+	* include/linux/elf.h (EM_SH): Add here.
+
+	Updated to 2.3.15.
+	* include/asm/sh/pgtable.h (io_remap_page_range): Added.
+
+1999-08-26  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* asm-sh/pgtable.h (SET_PAGE_DIR): Removed.
+
+	* mm/fault.c (do_page_fault): Store the address to thread
+	structure.
+
+	* asm-sh/processor.h (start_thread): Make it macro, instead of
+	inline function to avoid inclusion of ptrace.h.
+	Add the member "address" to store the memory address to be paged.
+
+	* asm-sh/system.h (rmb, wmb): Added.
+
+	* defconfig: New file.
+	* config.in: Add processor type selection, endianness, and memory
+	start address.
+
+1999-08-25  John Hassey  <hassey@gte.net>
+
+	* asm-sh/byteorder.h: Add little endian support.
+
+	* kernel/head.S: Check if cache is enabled already.
+	Don't flush it, if it is the case.
+
+	* vmlinux.lds(___bss_start,__end): Aligned to 4-byte.
+
+1999-08-25  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* asm-sh/elf.h (ELF_DATA): Support little endian.
+
+	* drivers/block/rd.c (rd_request): Add minimum hack to
+	support ramdisk for root filesystem.
+
+1999-08-24  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* mm/init.c (mem_init): Bug fix for counting datapages.
+
+	* asm-sh/string.h (strncpy,strncmp): Clean up.
+	* asm-sh/system.h (xchg_u32): Bug fix.
+	* kernel/process.c (__switch_to, copy_thread): Handle the case where
+	mm == 0.
+
+	* kernel/head.S(_stext:1): Fixed to correct mask value.
+	Reported by John Hassey  <hassey@gte.net>.
+
+1999-08-23  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* asm-sh/cache.h, asm-sh/hardirq.h, asm-sh/init.h, asm-sh/io.h,
+	asm-sh/mmu_context.h, asm-sh/page.h, asm-sh/pgtable.h,
+	asm-sh/processor.h, asm-sh/semaphore.h, asm-sh/softirq.h,
+	asm-sh/spinlock.h, asm-sh/system.h, asm-sh/unistd.h: 
+	Update to 2.3.14.
+
+	* asm-sh/hw_irq.h: New file (2.3.14).
+
+	* kernel/entry.S (sys_idle), kernel/process.c (sys_idle): Removed
+	(Update to 2.3.14).
+
+	* mm/init.c, mm/fault.c, kernel/init_task.c: Updated to 2.3.14.
+	* kernel/signal.c (do_signal): Update to 2.3.14.
+	* kernel/traps.c (DO_ERROR): Updated to 2.3.14.
+
+	* config.in: Remove support of JAVA binaries.
+
+1999-08-22  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* kernel/entry.S (signal_return): Revert the changes of	08-19.
+	(DO_FAULT): Remove unblocking of interrupt (not needed).
+	(interrupt): Set return address ret_from_irq, instead of
+	ret_from_syscall.
+
+	* string.h (strncpy): Fix uninitialized __limit.
+
+	* kernel/signal.c (setup_frame,setup_rt_frame): Support both endians.
+
+1999-08-19  Niibe Yutaka  <gniibe@m17n.org>
+
+	* Second version, named "OSHIDASHI".
+		Linux 2.2.11.
+
+	* system.h (__sti, __cli, __save_and_cli): Bug fix.
+	* kernel/entry.S (signal_return, DO_FAULT): Bug fix.
+
+	* string.h: Remove useless "earlyclobber" constraints from asm
+	statements.
+	* uaccess.h,string.h,system.h: Don't write "r0" directly, instead
+	use %n specification.
+
+	* socket.h, pgtable.h (ZERO_PAGE), mm/ioremap.c (__ioremap), mm/init.c
+	(show_mem): Updated to 2.2.11.
+
+	* kernel/traps.c: Implement exception handling for address error,
+	reserved instruction and illegal slot instruction.
+
+	* kernel/test-img.c (root_fs_image): compressed by GNU zip.
+	* kernel/setup.c (setup_arch), kernel/test-img.c: New root file
+	system image which includes executable using signal.
+
+	* kernel/entry.S (ret_with_reschedule): Bug fix for access
+	tsk->sigpending.
+	(nmi, debug): Removed (because this is only for my board).
+
+	* kernel/entry.S (exception_handling_table): set sys_ni_syscall
+	for ioperm, iopl, and vm86.
+	* kernel/ioport.c, kernel/vm86.c: Removed.
+
+	* sigcontext.h, kernel/signal.c: Signal handling implemented.
+
+	* sh3sci.c (put_char): Clean up a bit.
+
+1999-08-18  Niibe Yutaka  <gniibe@m17n.org>
+
+	* Initial version, named "YORIKIRI".
+
+	It boots!  It runs ELF executable! It forks!
+
+	Environment:
+		Linux 2.2.10.
+		Kyoto Micro Computer's SH-3 Evaluation Board (SH7708 60MHz).
+		GDB 4.18 with patch for the board.
+		GNU binutils snapshot 1999-08-17.
+		EGCS 1.1.2.
+
+	Start writing ChangeLog:
+	* vmlinux.lds: Linker script for vmlinux.
+
+	* kernel/vm86.c, kernel/traps.c, kernel/time.c, kernel/sys_sh.c,
+	  kernel/sh_ksyms.c, kernel/setup.c, kernel/irq.c,
+	  kernel/ioport.c, kernel/init_task.c, kernel/head.S,
+	  kernel/entry.S, kernel/signal.c, kernel/ptrace.c,
+	  kernel/process.c:  It works!
+
+	* kernel/test-img.c: Root fs image with
+		/dev/console --> /dev/tty0 (4,0)
+		/linuxrc printing "Hello World!.
+
+	* lib/checksum.c, lib/csum_partial_copy.c, lib/delay.c, lib/memcpy.S,
+	lib/memmove.S, lib/memset.S, lib/old-checksum.c, lib/wordcopy.S:
+	Taken from GCC outputs, newlib-1.8.0, and other part of Linux.
+
+	* mm/extable.c, mm/fault.c, mm/init.c, mm/ioremap.c:
+	Implement SH-3 MMU.
+
+	* semaphore-helper.h, atomic.h, current.h, mman.h, processor.h,
+	unistd.h, bugs.h, softirq.h, user.h, bitops.h, shmparam.h,
+	namei.h, elf.h, ioctls.h, posix_types.h, statfs.h, termios.h,
+	termbits.h, signal.h, siginfo.h, unaligned.h, semaphore.h,
+	uaccess.h, system.h, cache.h, pgtable.h: Header files.
+
+	* mmu_context.h: New file.  Idea taken from MIPS Implementation.
+
+Little History:
+
+I've started the project which ports Linux to SuperH in the summer of
+1998.  Got the CPU programming manual and hardware manual from
+Hitachi, prepared GNU tool-chains (binutils, gcc) on my Intel box.
+
+I've asked Hitachi for hardware information of thier Windows CE
+machine, but it seemed that it was difficult for Hitachi to disclose
+the information (NDA wrt Microsoft???).  Anyway, I've started writing
+some code with Linux version 2.1.63.
+
+As there's no platform running the code, I got bored.  Hence, in June
+1999, I bought "SH-3 Evaluation Kit" made by Kyoto Micro Computer,
+which is available from CQ publishing company (in Japan).  At first,
+I've port GDB for that board, it helps me much for understanding the
+CPU.  Then, I port Linux 2.2.10.
+
+			-- Niibe Yutaka
+				at ETL, Tsukuba, Japan.
+				1999-08-18

@@ -1,0 +1,13 @@
+/Makefile/1.9/Tue Jun 29 01:59:02 2004/-ko/
+/checksum.S/1.3/Fri Sep  2 23:02:18 2005/-ko/
+/delay.c/1.5/Mon Aug 29 21:01:18 2005/-ko/
+/div64-generic.c/1.2/Sat Sep  6 00:27:16 2003//
+/div64.S/1.2/Sat Jul 19 22:56:20 2003//
+/memchr.S/1.2/Wed Apr  7 20:18:39 2004/-ko/
+/memcpy-sh4.S/1.1/Tue Jun 29 01:59:02 2004/-ko/
+/memcpy.S/1.2/Wed Apr  7 20:18:39 2004/-ko/
+/memmove.S/1.4/Tue Apr 20 13:06:06 2004/-ko/
+/memset.S/1.3/Mon Jul 25 00:55:36 2005/-ko/
+/strlen.S/1.2/Wed Apr  7 20:18:39 2004/-ko/
+/udivdi3.c/1.2/Sat Jul 19 22:56:20 2003//
+D

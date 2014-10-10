@@ -1,0 +1,162 @@
+2005-10-31  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Hitfb update. 
+	
+	* drivers/video/hitfb.c: Fix pannig and bitblt.
+	(hitfb_sync): New function. 
+	(hitfb_check_var): New function. 
+	(hitfb_set_par): New function. 
+	* drivers/video/backlight/hp680_bl.c: Use platform device id -1.
+
+2005-08-22  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Add SH3 DMA support.
+	
+	* include/asm-sh/cpu-sh3/dma-sh.h: New file.
+	* include/asm-sh/cpu-sh4/dma-sh.h: New file.
+	* arch/sh/drivers/dma/dma-sh.c: Add SH3 DMA.
+	* arch/sh/drivers/dma/dma-sh.h: Likewise.
+	* include/asm-sh/cpu-sh3/dma.h: Likewise.
+	* include/asm-sh/dma.h: Likewise.
+
+2005-08-15  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Fix bug in hd64461 pcmcia module.
+	
+	* drivers/pcmcia/hd64461_ss.c: Better init procedure.
+	* arch/sh/boards/hp6xx/setup.c: Disable hd64461 pcmcia and DAC at boot.
+
+2005-07-25  SUGIOKA Toshinobu <sugioka@itonet.co.jp>
+
+	* arch/sh/lib/memset.S (memset): Correct 2nd argument handling.
+
+2005-06-15  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Add linux backlight support for HP Jornada 680.
+	
+	* drivers/video/hitfb.c: Remove jornada's backlight stuff.
+	* drivers/video/backlight/Makefile: New file.
+	* drivers/video/backlight/Kconfig: New file.
+	* drivers/video/backlight/hp680_bl.c: New file.
+
+2005-06-10  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Add sh7709 clock support.
+
+	* arch/sh/kernel/cpu/clock.c: Propagate bus clock.
+	* arch/sh/kernel/cpu/sh3/clock-sh7709.c: New file.
+	* arch/sh/kernel/cpu/sh3/Makefile: Add clock-sh7709.o.
+	* sound/oss/sh_dac_audio.c: Update to clock framework.
+
+2005-06-10  Andriy Skulysh <askulysh@image.kiev.ua>
+
+	Fix hp6xx changes. Split HP600 keyboard routine for 620 and 680/690. 
+
+	* include/asm-sh/irq.h: Fix hp6xx changes.
+	* drivers/input/touchscreen/Kconfig: Likewise.
+	* drivers/video/hitfb.c: HP690 seems to have only 512 Kb video memory.
+	* drivers/input/keyboard/hp620_keyb.c: New file.
+	* drivers/input/keyboard/hp680_keyb.c: New file.
+	* drivers/input/keyboard/hp600_keyb.c: Removed file.
+	* drivers/input/keyboard/Makefile: Split update.
+	* drivers/input/keyboard/Kconfig: Split update.
+
+2005-05-21  Paul Mundt  <lethal@linux-sh.org>
+
+	Patches from Hosokawa-san <hosokawa@ace-jp.com>:
+
+	* drivers/char/Makefile: Add rtc9701_rtc rule that was dropped.
+	* drivers/char/rtc9701_rtc.c: Update rtc_lock definition.
+	(rtc9701_rtc_interrupt): Modify for irqreturn_t type.
+
+2005-03-26  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/Kconfig: Make TMU selectable (CONFIG_SH_TMU).
+	Drop CONFIG_SH_PCLK_CALC, we make this the default if we
+	have an RTC and no set PCLK value.
+
+	* arch/sh/boards/overdrive/Makefile: Drop time.o
+	* arch/sh/boards/overdrive/time.c: Deleted.
+	* arch/sh/boards/overdrive/setup.c (platform_setup): Drop
+	od_time_init usage, rely on the clock framework instead.
+
+	* arch/sh/kernel/Makefile: Add timers/
+	* arch/sh/kernel/time.c: Rip out clock and TMU code.
+	* arch/sh/kernel/setup.c: Remove clock reporting, use the generic
+	show_clocks() provided by the clock framework instead.
+
+	* arch/sh/kernel/timers/timer.c: New file, common bits for timer
+	framework.
+	* arch/sh/kernel/timers/timer-tmu.c: Move TMU system timer code
+	here, hook into common timer framework.
+
+	* arch/sh/kernel/cpu/Makefile: Add clock.o
+	* arch/sh/kernel/cpu/clock.c: New file, adding clock framework.
+
+	* arch/sh/kernel/cpu/sh3/Makefile: Add clock support.
+	* arch/sh/kernel/cpu/sh3/clock-sh3.c,
+	  arch/sh/kernel/cpu/sh3/clock-sh7300.c,
+	  arch/sh/kernel/cpu/sh3/clock-sh7705.c: SH-3 clock support.
+
+	* arch/sh/kernel/cpu/sh4/Makefile: Add clock support.
+	* arch/sh/kernel/cpu/sh4/clock-sh4-202.c,
+	  arch/sh/kernel/cpu/sh4/clock-sh4.c,
+	  arch/sh/kernel/cpu/sh4/clock-sh73180.c: SH-4 clock support.
+
+	* drivers/serial/sh-sci.c: Update for clock framework.
+	* drivers/serial/sh-sci.h: Likewise.
+
+	* include/asm-sh/clock.h: New file for clock framework.
+	* include/asm-sh/timer.h: New file for timer framework.
+
+	* include/asm-sh/freq.h: Remove unused cruft.
+	* include/asm-sh/processor.h: Remove clocks from struct sh_cpuinfo.
+
+	* include/asm-sh/timex.h: Update CLOCK_TICK_RATE to match HZ.
+
+2005-03-10 Andriy Skulysh <askulysh@image.kiev.ua>
+
+	* drivers/pcmcia/hd64461_ss.c (hd64461_init_soket): Update 
+	for 2.6.11.
+
+2005-03-06  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/mm/cache-sh4.c (flush_cache_range): page align the
+	end address, this was causing an unaligned fault in some cases.
+
+	Also check the size of the range, of the range >= 64 pages,
+	just purge the entire dcache instead of manually walking the
+	page tables and checking for aliases. This gives a noticeable
+	performance win, as per sh64.
+
+2005-03-02  Paul Mundt  <lethal@linux-sh.org>
+
+	Merge 2.6.11.
+
+	* TODO: Get rid of the in-kernel TODO list, we will use the wiki
+	instead.
+	
+	* arch/sh/configs/*_defconfig: Update for 2.6.11.
+
+2005-02-02  Kristoffer Ericson  <kristoffer@jlime.com>
+
+	* arch/sh/boards/hp6xx/hp620/Makefile: Add setup.o rule.
+	* arch/sh/boards/hp6xx/hp620/setup.c: New file adding hp620 setup
+	code (cloned from hp680 with some minor modification).
+
+2005-02-01  Kristoffer Ericson  <kristoffer@jlime.com>
+
+	* drivers/pcmcia/hd64461_ss.c (hd64461_set_mem_map): Fix build problem
+	with start address.
+
+2005-01-31  Paul Mundt  <lethal@linux-sh.org>
+
+	* arch/sh/kernel/cpufreq.c (sh_cpufreq_setstate): Update for cpumask
+	changes.
+
+2005-01-31  Paul Mundt  <lethal@linux-sh.org>
+	    Christoph Hellwig <hch@lst.de>
+
+	* arch/sh/Kconfig, arch/sh/kernel/irq.c, include/asm-sh/hardirq.h:
+	Patch from Christoph Hellwig implementing generic hardirq support.
+	Initial testing done by Tom Rini on SE7750.

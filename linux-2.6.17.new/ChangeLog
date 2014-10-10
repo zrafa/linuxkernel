@@ -1,0 +1,19 @@
+2006-06-05	Adrian McMenamin <adrian@mcmen.demon.co.uk>
+
+	Dreamcast AICA driver tidy
+
+	* sound/sh/aica.c: code tidying of whitespace and returns
+	* sound/sh/Kconfig: tidying
+
+
+2006-06-04	Adrian McMenamin <adrian@mcmen.demon.co.uk>
+
+	Dreamcast AICA sound support added
+
+	* sound/Kconfig: Added here and updated to support ALSA SH devices
+	* sound/Makefile: Added here and updated to support ALSA SH devices
+	* sound/sh: New directory to hold ALSA files for SH devices
+	* sound/sh/aica.c: New file to add AICA sound support
+	* sound/sh/aica.h: Header to upport AICA sound
+	* sound/sh/Kconfig: New file to add AICA sound support
+	* sound/sh/Makefile: New file required to add AICA sound support
